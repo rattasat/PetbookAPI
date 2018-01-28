@@ -1,0 +1,18 @@
+doctype html
+html
+    head
+        title= title
+    body
+        div 
+            h2 Hello #{username}
+        if pets 
+            div
+                ul Pets
+                    each pet in pets
+                        li
+                            a(href="/pet/" + pet._id)= pet.name
+        div
+            a(href="/createpet") Create pet
+        div
+            form(name="logout", method="post", action="/api/logout")
+                input(type="submit", value="Logout")

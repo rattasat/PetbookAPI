@@ -1,0 +1,96 @@
+doctype html
+html
+    head
+        style.
+            #map {
+            height: 400px;
+            width: 500px;
+            }
+        title= title
+        script(src="http://code.jquery.com/jquery-1.11.1.min.js")
+    body
+        div 
+            ul Pet
+                    li Name: #{jsdata.pet.name}
+                    li type: #{jsdata.pet.type}
+                    if jsdata.pet.gender
+                        li Gender: #{jsdata.pet.gender}
+                    if jsdata.pet.age
+                        li Age: #{jsdata.pet.age}
+                    if jsdata.pet.remarkable
+                        li Remarkable: #{jsdata.pet.remarkable}
+                    img(id="qrcode", src='', alt='')
+                    input(type="hidden", id="petid", value=jsdata.pet._id)
+            a(href="/" + jsdata.pet._id) go to #{jsdata.pet.name}
+            div
+                input#SDate(type='datetime-local')
+                input#FDate(type='datetime-local')
+                button(onclick="getlocation()") Get Location
+            div#location
+            if jsdata.petinlocation
+                input(type="hidden", id="latitude", value=jsdata.petinlocation.latitude)
+                input(type="hidden", id="longitude", value=jsdata.petinlocation.longitude)
+                div
+                    #map
+        script.
+            	$( document ).ready(function() {
+                    var img = document.getElementById("qrcode");
+                    var host = window.location.host;
+                    var petid = document.getElementById("petid").value;
+                    img.src = " https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + host + "/" + petid;
+                });
+            function initMap() {
+                var latitude = parseFloat(document.getElementById("latitude").value);
+                var longitude = parseFloat(document.getElementById("longitude").value);
+                if (latitude) {
+                    var uluru = {lat: latitude, lng: longitude};
+                    var map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 16,
+                        center: uluru
+                    });
+                    var marker = new google.maps.Marker({
+                        position: uluru,
+                        map: map
+                    });
+                }
+            }
+
+            function getlocation(){
+                var sdate = document.getElementById("SDate").value;
+                var fdate = document.getElementById("FDate").value;
+                var petid = document.getElementById("petid").value;
+                var pass = {
+                    petid : petid,
+                    sdate : sdate,
+                    fdate : fdate
+                }
+                var xhttp = new XMLHttpRequest();
+                    xhttp.open("POST", "/api/getLocation" , false);
+                    xhttp.setRequestHeader("Content-type", "application/json");
+                    xhttp.send(JSON.stringify(pass));
+                    var response = JSON.parse(xhttp.responseText);
+                    if (response.message == "success") {
+                        var location = document.getElementById("location");
+                        for (var i=0; i<response.location.length; i++) {
+                            var ul = document.createElement('ul');
+                            var la = document.createElement('li');
+                            var long = document.createElement('li');
+                            var date = document.createElement('li');
+                            var textdate = document.createTextNode(new Date(response.location[i].created));
+                            var textla = document.createTextNode(response.location[i].latitude);  
+                            var textlong = document.createTextNode(response.location[i].longitude);  
+                            date.appendChild(textdate);
+                            la.appendChild(textla);
+                            long.appendChild(textlong);
+                            ul.appendChild(textdate);
+                            ul.appendChild(la);
+                            ul.appendChild(long);
+                            location.appendChild(ul);
+                        }
+                    }
+                    else {
+                        alert(response.message);
+                    }
+            }
+        script(async='', defer='', src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDSh5-kHjHFdnuXEbQiiPwsFwn9hypTKwc&callback=initMap')
+

@@ -1,0 +1,23 @@
+doctype html
+html
+    head
+        title= title
+    body
+        form(name="createpet", method="post", action="/api/createpet")
+            div
+                label(for="type") Type
+                input(name="type", type="text", placeholder="type")
+            div
+                label(for="name") Name
+                input(name="name", type="text", placeholder="name")
+            div
+                label(for="gender") Gender
+                input(name="gender", type="text", placeholder="gender")
+            div
+                label(for="age") Age
+                input(name="age", type="text", placeholder="age")
+            div
+                label(for="remarkable") Remarkable
+                input(name="remarkable", type="text", placeholder="remarkable")
+            div
+                input(type="submit", value="Create")
