@@ -1,6 +1,5 @@
-var index = require('../controllers/index.controller');
+var user = require('../controllers/index.controller');
 
 module.exports = function(app) {
-    app.get('/', index.render);
-    app.get('/gg', index.test);
+    app.get('/', user.render);
 };

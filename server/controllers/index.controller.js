@@ -21,8 +21,3 @@ exports.render = function(req, res) {
         res.redirect('/login');
     }
 };
-
-exports.test = function(req, res) {
-    res.send("gg");
-};
-
