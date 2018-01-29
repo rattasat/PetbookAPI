@@ -1,6 +1,5 @@
 var config = require('./config');
 var mongoose = require('mongoose');
-mongoose.Promise = Promise;
 
 module.exports = function () {
     mongoose.set('debug', config.debug);
