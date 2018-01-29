@@ -3,7 +3,7 @@ var express = require('express');
 var morgan = require('morgan');
 var compression = require('compression');
 var bodyParser = require('body-parser');
-var session = require('express-session');
+var session = require('cookie-session');
 var passport = require('passport');
 
 module.exports = function() {
