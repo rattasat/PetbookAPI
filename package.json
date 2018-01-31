@@ -13,13 +13,10 @@
     "compression": "^1.7.1",
     "cookie-session": "^2.0.0-beta.3",
     "express": "^4.16.2",
-    "geoip-lite": "^1.2.1",
-    "geolocation": "^0.2.0",
     "jade": "^1.11.0",
     "mongoose": "^5.0.2",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "public-ip": "^2.4.0"
+    "passport-local": "^1.0.0"
   }
 }
