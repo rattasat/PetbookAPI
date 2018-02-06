@@ -46,7 +46,7 @@ exports.webhook = function (req, res, next) {
                                     User.findOneAndUpdate({
                                         username: username
                                     }, {
-                                        lineUserid: event.source.userId
+                                        lineUserId: event.source.userId
                                     }, function (err) {
                                         if (err) {
                                             throw err;
