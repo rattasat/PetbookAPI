@@ -104,11 +104,11 @@ exports.webhook = function (req, res, next) {
         }));
 };
 
-exports.pushmessage = function (lineUserid, message) {
+exports.pushmessage = function (lineUserId, message) {
     line.client
         .pushMessage({
-            to: lineUserid,
-            message: [{
+            to: lineUserId,
+            messages: [{
                 "type": "text",
                 "text": message
             }]

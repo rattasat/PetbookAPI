@@ -89,15 +89,7 @@ exports.saveLocation = function (req, res, next, pet) {
                         if (error) {
                             throw error;
                         } else {
-                            // line.client
-                            //     .pushMessage({
-                            //         to: lineid.lineUserId,
-                            //         messages: [{
-                            //             "type": "text",
-                            //             "text": "We found your pet, please check on website."
-                            //         }]
-                            //     });
-                            if (lineid.lineUserId) {
+                            if (lineid.lineUserId != "null") {
                                 var message = "We found your pet, please check on website."
                                 line.pushmessage(lineid.lineUserId, message);
                             }
