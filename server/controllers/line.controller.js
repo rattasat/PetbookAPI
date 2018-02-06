@@ -12,23 +12,48 @@ line.validator.validateSignature();
 
 exports.webhook = function (req, res, next) {
     var promises = req.body.events.map(event => {
-        if (event.type === 'message') {
-            if (event.message.text.match(/^.* confirm$/)) {
-                var str = event.message.text.split(" ");
-                var username = str[0];
-                line.client
-                    .replyMessage({
-                        replyToken: event.replyToken,
-                        messages: [{
-                                type: 'text',
-                                text: username
-                            },
-                            {
-                                type: 'text',
-                                text: "Already in petbook."
+            if (event.type === 'message') {
+                if (event.message.text.match(/^.* confirm$/)) {
+                    var str = event.message.text.split(" ");
+                    var username = str[0];
+                    User.findOne({
+                            username: username;
+                        }, 'lineUserId', function (err, thisUser) {
+                            if (err) {
+                                line.client
+                                    .replyMessage({
+                                        replyToken: event.replyToken,
+                                        messages: [{
+                                            type: 'text',
+                                            text: 'not found' + username
+                                        }]
+                                    });
+                            } else {
+                                // if (thisUser.lineUserid) {
+                                line.client
+                                    .replyMessage({
+                                        replyToken: event.replyToken,
+                                        messages: [{
+                                            type: 'text',
+                                            text: username + "already in petbook."
+                                        }]
+                                    });
                             }
-                        ]
+                        }
                     });
+                // line.client
+                //     .replyMessage({
+                //         replyToken: event.replyToken,
+                //         messages: [{
+                //                 type: 'text',
+                //                 text: username
+                //             },
+                //             {
+                //                 type: 'text',
+                //                 text: "Already in petbook."
+                //             }
+                //         ]
+                //     });
             }
             return Promise.resolve();
         } else if (event.type === 'follow') {
@@ -61,11 +86,11 @@ exports.webhook = function (req, res, next) {
             return Promise.resolve();
         }
     });
-    Promise
-        .all(promises)
-        .then(() => res.json({
-            success: true
-        }));
+Promise
+    .all(promises)
+    .then(() => res.json({
+        success: true
+    }));
 };
 
 exports.pushmessage = function (lineUserid, message) {
