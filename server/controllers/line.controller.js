@@ -17,45 +17,54 @@ exports.webhook = function (req, res, next) {
                 var str = event.message.text.split(" ");
                 var username = str[0];
                 User.findOne({
-                    username: username
-                }, 'lineUserId', function (err, thisUser) {
-                    if (err) {
-                        throw err;
-                    } else {
-                        if (thisUser.lineUserid) {
-                            line.client
-                                .replyMessage({
-                                    replyToken: event.replyToken,
-                                    messages: [{
-                                        type: 'text',
-                                        text: username + " already in petbook."
-                                    }]
-                                });
+                        username: username
+                    }, 'username lineUserId',
+                    function (err, thisUser) {
+                        if (err) {
+                            throw err;
                         } else {
-                            line.client
-                                .replyMessage({
-                                    replyToken: event.replyToken,
-                                    messages: [{
-                                        type: 'text',
-                                        text: 'not found ' + username
-                                    }]
-                                });
+                            if (!thisUser) {
+                                line.client
+                                    .replyMessage({
+                                        replyToken: event.replyToken,
+                                        messages: [{
+                                            type: 'text',
+                                            text: 'ไม่พบ ' + username
+                                        }]
+                                    });
+                            } else {
+                                if (thisUser.lineUserid) {
+                                    line.client
+                                        .replyMessage({
+                                            replyToken: event.replyToken,
+                                            messages: [{
+                                                type: 'text',
+                                                text: username + ' ได้ทำการยืนยันตัวตนก่อนหน้านี้แล้ว'
+                                            }]
+                                        });
+                                } else {
+                                    User.findOneAndUpdate({
+                                        username: username
+                                    }, {
+                                        lineUserid: event.source.userId
+                                    }, function (err) {
+                                        if (err) {
+                                            throw err;
+                                        } else {
+                                            line.client
+                                                .replyMessage({
+                                                    replyToken: event.replyToken,
+                                                    messages: [{
+                                                        type: 'text',
+                                                        text: 'ทำการยืนยันตัวตนสำหรับ ' + username + ' เรียบร้อยแล้ว'
+                                                    }]
+                                                });
+                                        }
+                                    });
+                                }
+                            }
                         }
-                    }
-                });
-                // line.client
-                //     .replyMessage({
-                //         replyToken: event.replyToken,
-                //         messages: [{
-                //                 type: 'text',
-                //                 text: username
-                //             },
-                //             {
-                //                 type: 'text',
-                //                 text: "Already in petbook."
-                //             }
-                //         ]
-                //     });
+                    });
             }
             return Promise.resolve();
         } else if (event.type === 'follow') {
