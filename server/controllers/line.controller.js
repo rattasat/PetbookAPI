@@ -20,24 +20,27 @@ exports.webhook = function (req, res, next) {
                     username: username
                 }, 'lineUserId', function (err, thisUser) {
                     if (err) {
-                        line.client
-                            .replyMessage({
-                                replyToken: event.replyToken,
-                                messages: [{
-                                    type: 'text',
-                                    text: 'not found' + username
-                                }]
-                            });
+                        throw err;
                     } else {
-                        // if (thisUser.lineUserid) {
-                        line.client
-                            .replyMessage({
-                                replyToken: event.replyToken,
-                                messages: [{
-                                    type: 'text',
-                                    text: username + "already in petbook."
-                                }]
-                            });
+                        if (thisUser.lineUserid) {
+                            line.client
+                                .replyMessage({
+                                    replyToken: event.replyToken,
+                                    messages: [{
+                                        type: 'text',
+                                        text: username + " already in petbook."
+                                    }]
+                                });
+                        } else {
+                            line.client
+                                .replyMessage({
+                                    replyToken: event.replyToken,
+                                    messages: [{
+                                        type: 'text',
+                                        text: 'not found ' + username
+                                    }]
+                                });
+                        }
                     }
                 });
                 // line.client
