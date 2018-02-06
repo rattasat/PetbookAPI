@@ -33,7 +33,7 @@ exports.webhook = function (req, res, next) {
                                         }]
                                     });
                             } else {
-                                if (thisUser.lineUserid) {
+                                if (thisUser.lineUserid != "null") {
                                     line.client
                                         .replyMessage({
                                             replyToken: event.replyToken,
