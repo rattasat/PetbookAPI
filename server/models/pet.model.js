@@ -9,7 +9,7 @@ var PetSchema = new Schema({
     age: String,
     image: String,
     remarkable: String,
-    lostStatus: Boolean,
+    lostStatus: String,
     deleteFlag: Boolean
 });
 

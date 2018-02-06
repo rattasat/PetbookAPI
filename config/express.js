@@ -1,9 +1,8 @@
 var config = require('./config');
 var express = require('express');
 var morgan = require('morgan');
-var compression = require('compression');
 var bodyParser = require('body-parser');
-var session = require('cookie-session');
+var session = require('express-session');
 var passport = require('passport');
 
 module.exports = function() {
@@ -12,9 +11,6 @@ module.exports = function() {
     if (process.env.NODE_ENV === 'development'){
         app.use(morgan('dev'));
     } 
-    else{
-        app.use(compression);
-    }
 
     app.use(session({
         secret: config.sessionSecret,
@@ -36,7 +32,7 @@ module.exports = function() {
     require('../server/routes/user.route')(app);
     require('../server/routes/index.route')(app);
     require('../server/routes/pet.route')(app);
-    
+    require('../server/routes/line.route')(app);
     app.use(express.static('./public'));
     return app;
 };

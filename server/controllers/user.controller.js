@@ -17,7 +17,7 @@ exports.create = function(req, res, next) {
 exports.signup = function(req, res, next) {
     if (!req.user) {
         var user = new User(req.body);
-
+        
         user.save(function(err) {
             if (err) {
                 return res.redirect('/signup');
