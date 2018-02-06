@@ -8,6 +8,7 @@ html
             }
         title= title
         link(rel='icon', href='image/petbook_login_logo.png', sizes='32x32')
+        script(src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js')
         script(src="http://code.jquery.com/jquery-1.11.1.min.js")
     body
         div 
@@ -38,7 +39,7 @@ html
             	$( document ).ready(function() {
                     var img = document.getElementById("qrcode");
                     var qr = document.getElementById("qrurl").value;
-                    img.src = " https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qr;
+                    img.src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qr;
                 });
             function initMap() {
                 var latitude = parseFloat(document.getElementById("latitude").value);
