@@ -17,7 +17,7 @@ exports.webhook = function (req, res, next) {
                     var str = event.message.text.split(" ");
                     var username = str[0];
                     User.findOne({
-                            username: username;
+                            username: username
                         }, 'lineUserId', function (err, thisUser) {
                             if (err) {
                                 line.client
