@@ -6,7 +6,7 @@ var config = require('../../config/config');
 
 line.init({
     accessToken: config.accessToken,
-    chanelSecret: config.chanelSecret
+    channelSecret: config.channelSecret
 });
 line.validator.validateSignature();
 
@@ -16,7 +16,19 @@ exports.webhook = function (req, res, next) {
             if (event.message.text.match(/^.* confirm$/)) {
                 var str = event.message.text.split(" ");
                 var username = str[0];
-
+                line.client
+                    .replyMessage({
+                        replyToken: event.replyToken,
+                        messages: [{
+                                type: 'text',
+                                text: username
+                            },
+                            {
+                                type: 'text',
+                                text: "Already in petbook."
+                            }
+                        ]
+                    });
             }
             return Promise.resolve();
         } else if (event.type === 'follow') {
