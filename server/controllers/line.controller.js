@@ -69,7 +69,7 @@ exports.webhook = function (req, res, next) {
             return Promise.resolve();
         } else if (event.type === 'follow') {
             var follower = new Follower({
-                lineUserid: event.source.userId
+                lineUserId: event.source.userId
             });
             follower.save(function (err) {
                 if (err) {
