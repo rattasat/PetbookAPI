@@ -9,7 +9,7 @@ exports.insertpet = function (req, res, next) {
         res.redirect('/login');
     } else {
         var pet = new Pet(req.body);
-        pet.lostStatus = "0";
+        pet.lostStatus = "1";
         pet.username = req.user.username;
 
         pet.save(function (err) {
