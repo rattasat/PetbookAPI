@@ -22,6 +22,7 @@ html
                         li Remarkable: #{jsdata.pet.remarkable}
                     img(id="qrcode", src='', alt='')
                     input(type="hidden", id="petid", value=jsdata.pet._id)
+                    input(type="hidden", id="qrurl", value=jsdata.qrcode.url)
             a(href="/" + jsdata.pet._id) go to #{jsdata.pet.name}
             div
                 input#SDate(type='datetime-local')
@@ -36,9 +37,8 @@ html
         script.
             	$( document ).ready(function() {
                     var img = document.getElementById("qrcode");
-                    var host = window.location.host;
-                    var petid = document.getElementById("petid").value;
-                    img.src = " https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + host + "/" + petid;
+                    var qr = document.getElementById("qrurl").value;
+                    img.src = " https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + qr;
                 });
             function initMap() {
                 var latitude = parseFloat(document.getElementById("latitude").value);

@@ -147,7 +147,10 @@ exports.getOwnPet = function (req, res, next, ownpet) {
                         } else {
                             req.jsdata = {
                                 pet: pet,
-                                petinlocation: petinlocation
+                                petinlocation: petinlocation,
+                                qrcode: {
+                                    url: "https://petbookthai.herokuapp.com/" + pet._id
+                                }
                             };
                             next();
                         }
