@@ -95,21 +95,22 @@ exports.webhook = function (req, res, next) {
                 }
             });
             return Promise.resolve();
-        } else if (event.type === 'unfollow') {
-            Follower.remove({
-                lineUserId: event.source.userId
-            }, function (err) {
-                throw err;
-            });
-            User.findOneAndUpdate({
-                lineUserId: event.source.userId
-            }, {
-                lineUserId: "null"
-            }, function (err) {
-                throw err;
-            });
-            return Promise.resolve();
         }
+        // else if (event.type === 'unfollow') {
+        //     Follower.remove({
+        //         lineUserId: event.source.userId
+        //     }, function (err) {
+        //         throw err;
+        //     });
+        //     User.findOneAndUpdate({
+        //         lineUserId: event.source.userId
+        //     }, {
+        //         lineUserId: "null"
+        //     }, function (err) {
+        //         throw err;
+        //     });
+        //     return Promise.resolve();
+        // }
     });
     Promise
         .all(promises)
