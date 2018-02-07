@@ -1,4 +1,5 @@
 var Pet = require('mongoose').model('Pet');
+
 exports.render = function(req, res) {
     if (req.user) {
         Pet.find({
@@ -12,6 +13,7 @@ exports.render = function(req, res) {
                 res.render('index', {
                     title: 'Petbook',
                     username: req.user.firstName,
+                    lineUserId: req.user.lineUserId,
                     pets: pets
                 });
             }

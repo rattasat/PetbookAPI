@@ -5,6 +5,11 @@ html
     body
         div 
             h2 Hello #{username}
+            h2 Status :
+                if lineUserid == "null"
+                    โปรดยืนยันตัวตันในไลน์
+                else
+                    ยืนยันตัวตนแล้ว
         if pets 
             div
                 ul Pets

@@ -57,13 +57,3 @@ exports.renderLogin = function(req, res) {
     }
 };
 
-exports.registerline = function(req, res, next) {
-    var result = { message : "" };
-    if(!req.user) {
-
-    }
-    else {
-        result.message = "please login";
-    }
-};
-
