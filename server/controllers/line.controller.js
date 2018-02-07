@@ -68,16 +68,10 @@ exports.webhook = function (req, res, next) {
             }
             return Promise.resolve();
         } else if (event.type === 'follow') {
-            var follower = new Follower({
-                lineUserId: event.source.userId,
-                deleteFlag: "0"
-            });
             Follower.findOneAndUpdate({
                 lineUserId: event.source.userId,
-                deleteFlag: "0"
             }, {
                 lineUserId: event.source.userId,
-                deleteFlag: "0"
             }, {
                 upsert: true,
                 new: true
@@ -102,19 +96,21 @@ exports.webhook = function (req, res, next) {
             });
             return Promise.resolve();
         } else if (event.type === 'unfollow') {
-            Follower.findOneAndUpdate({
+            Follower.remove({
                 lineUserId: event.source.userId
-            }, {
-                deleteFlag: "1"
             }, function (err) {
-                throw err;
+                if (err) {
+                    throw err;
+                }
             });
             User.findOneAndUpdate({
                 lineUserId: event.source.userId
             }, {
                 lineUserId: "null"
             }, function (err) {
-                throw err;
+                if (err) {
+                    throw err;
+                }
             });
             return Promise.resolve();
         }
