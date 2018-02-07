@@ -125,7 +125,7 @@ exports.webhook = function (req, res, next) {
             // });
             return Promise.resolve();
         } else if (event.type === 'unfollow') {
-            Follower.findByIdAndUpdate({
+            Follower.findOneAndUpdate({
                 lineUserId: event.source.userId
             }, {
                 deleteFlag: "1"
