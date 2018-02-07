@@ -100,29 +100,6 @@ exports.webhook = function (req, res, next) {
                         ]
                     });
             });
-            // follower.save(function (err) {
-            //     if (err) {
-            //         throw err;
-            //     } else {
-            //         line.client
-            //             .replyMessage({
-            //                 replyToken: event.replyToken,
-            //                 messages: [{
-            //                         type: 'text',
-            //                         text: 'ยินดีต้อนรับเข้าสู่ Petbook'
-            //                     },
-            //                     {
-            //                         type: 'text',
-            //                         text: 'official line นี้เป็นแหล่งสำหรับกระจายข่าวสารข้อมูลสัตว์เลี้ยงและสำหรับยืนยันตัวตนกับทางเว็บไซต์'
-            //                     },
-            //                     {
-            //                         type: 'text',
-            //                         text: 'หากท่านทำการสมัครสมาชิกกับทางเว็บไซต์เรียบร้อยแล้วกรุณาทำการยืนยันตัวตนโดยการ พิมพ์ username เว้นวรรค แลัวตามด้วย confirm เช่น "petbook confirm" '
-            //                     }
-            //                 ]
-            //             });
-            //     }
-            // });
             return Promise.resolve();
         } else if (event.type === 'unfollow') {
             Follower.findOneAndUpdate({
