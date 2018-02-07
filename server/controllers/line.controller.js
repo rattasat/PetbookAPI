@@ -69,7 +69,8 @@ exports.webhook = function (req, res, next) {
             return Promise.resolve();
         } else if (event.type === 'follow') {
             var follower = new Follower({
-                lineUserId: event.source.userId
+                lineUserId: event.source.userId,
+                deleteFlag: "0"
             });
             follower.save(function (err) {
                 if (err) {
@@ -96,6 +97,15 @@ exports.webhook = function (req, res, next) {
             });
             return Promise.resolve();
         }
+        else if(event.type === 'unfollow') {
+            Follow.findOneAndUpdate({
+                lineUserId: event.source.userId
+            }, {
+                deleteFlag: "1"
+            })
+            return Promise.resolve();
+        }
+        
     });
     Promise
         .all(promises)
