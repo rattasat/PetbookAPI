@@ -73,6 +73,9 @@ html
                     var response = JSON.parse(xhttp.responseText);
                     if (response.message == "success") {
                         var location = document.getElementById("location");
+                        while (location.firstChild) {
+                            location.removeChild(location.firstChild);
+                        }
                         for (var i=0; i<response.location.length; i++) {
                             var ul = document.createElement('ul');
                             var la = document.createElement('li');
