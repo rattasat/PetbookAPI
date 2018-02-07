@@ -101,7 +101,7 @@ exports.webhook = function (req, res, next) {
             }, function (err) {
                 throw err;
             });
-            User.findByIdAndUpdate({
+            User.findOneAndUpdate({
                 lineUserId: event.source.userId
             }, {
                 lineUserId: "null"
