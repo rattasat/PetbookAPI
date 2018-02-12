@@ -163,6 +163,7 @@ exports.getOwnPet = function (req, res, next, ownpet) {
 };
 
 exports.getLocation = function (req, res, next) {
+    console.log(req.body.sdate + " " + req.body.fdate);
     PetInlocation.find({
             petid: req.body.petid,
             created: {
