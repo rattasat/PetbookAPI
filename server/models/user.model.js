@@ -13,6 +13,7 @@ var UserSchema = new Schema({
         type: String
     },
     lineUserId: String,
+    lineStatus: String,
     firstName: String,
     lastName: String,
     email: String,

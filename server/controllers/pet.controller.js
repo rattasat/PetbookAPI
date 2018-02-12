@@ -85,11 +85,11 @@ exports.saveLocation = function (req, res, next, pet) {
                 if (result.lostStatus == "1") {
                     User.findOne({
                         username: result.username
-                    }, 'lineUserId', function (error, lineid) {
+                    }, 'lineUserId lineStatus', function (error, lineid) {
                         if (error) {
                             throw error;
                         } else {
-                            if (lineid.lineUserId != "null") {
+                            if (lineid.lineUserId == "active") {
                                 var message = "We found your pet, please check on website."
                                 line.pushmessage(lineid.lineUserId, message);
                             }

@@ -18,7 +18,7 @@ exports.webhook = function (req, res, next) {
                 var username = str[0];
                 User.findOne({
                         username: username
-                    }, 'username lineUserId',
+                    }, 'username lineUserId lineStatus',
                     function (err, thisUser) {
                         if (err) {
                             throw err;
@@ -33,7 +33,7 @@ exports.webhook = function (req, res, next) {
                                         }]
                                     });
                             } else {
-                                if (thisUser.lineUserId != "null") {
+                                if (thisUser.lineStatus == "active") {
                                     line.client
                                         .replyMessage({
                                             replyToken: event.replyToken,
@@ -42,7 +42,7 @@ exports.webhook = function (req, res, next) {
                                                 text: username + ' ได้ทำการยืนยันตัวตนก่อนหน้านี้แล้ว'
                                             }]
                                         });
-                                } else {
+                                } else if(thisUser.lineStatus == "notActive") {
                                     User.findOneAndUpdate({
                                         username: username
                                     }, {
@@ -68,6 +68,11 @@ exports.webhook = function (req, res, next) {
             }
             return Promise.resolve();
         } else if (event.type === 'follow') {
+            User.findOneAndUpdate({
+                lineUserId: event.source.userId
+            }, {
+                lineStatus: "active"
+            });
             Follower.findOneAndUpdate({
                 lineUserId: event.source.userId,
             }, {
@@ -106,7 +111,7 @@ exports.webhook = function (req, res, next) {
             User.findOneAndUpdate({
                 lineUserId: event.source.userId
             }, {
-                lineUserId: "null"
+                lineStatus: "block"
             }, function (err) {
                 if (err) {
                     throw err;
