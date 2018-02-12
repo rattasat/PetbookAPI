@@ -42,7 +42,7 @@ exports.webhook = function (req, res, next) {
                                                 text: username + ' ได้ทำการยืนยันตัวตนก่อนหน้านี้แล้ว'
                                             }]
                                         });
-                                } else if(thisUser.lineStatus == "notActive") {
+                                } else if (thisUser.lineStatus == "notActive") {
                                     User.findOneAndUpdate({
                                         username: username
                                     }, {
@@ -73,6 +73,10 @@ exports.webhook = function (req, res, next) {
                 lineUserId: event.source.userId
             }, {
                 lineStatus: "active"
+            }, function (err) {
+                if (err) {
+                    throw err;
+                }
             });
             Follower.findOneAndUpdate({
                 lineUserId: event.source.userId,

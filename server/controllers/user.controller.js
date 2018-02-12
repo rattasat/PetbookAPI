@@ -1,60 +1,59 @@
 var User = require('mongoose').model('User');
 
-exports.create = function(req, res, next) {
+exports.create = function (req, res, next) {
     var user = new User(req.body);
 
-    user.save(function(err) {
+    user.save(function (err) {
         if (err) {
             return next(err);
-        }
-        else {
-            var response = { result: "ok", message: user };
+        } else {
+            var response = {
+                result: "ok",
+                message: user
+            };
             res.json(response);
         }
     });
 };
 
-exports.signup = function(req, res, next) {
+exports.signup = function (req, res, next) {
     if (!req.user) {
         var user = new User(req.body);
         user.lineUserId = "null";
         user.lineStatus = "notActive";
-        user.save(function(err) {
+        user.save(function (err) {
             if (err) {
                 return res.redirect('/signup');
             }
-            req.login(user, function(err) {
+            req.login(user, function (err) {
                 if (err) {
                     return next(err);
                 }
                 return res.redirect('/');
-            }); 
+            });
         });
-    }
-    else {
+    } else {
         return res.redirect('/');
     }
 };
 
-exports.logout = function(req, res) {
+exports.logout = function (req, res) {
     req.logout();
     res.redirect('/');
 };
 
-exports.renderSignup = function(req, res) {
+exports.renderSignup = function (req, res) {
     res.render('signup', {
-       title: 'signup' 
+        title: 'signup'
     });
 };
 
-exports.renderLogin = function(req, res) {
+exports.renderLogin = function (req, res) {
     if (!req.user) {
         res.render('login', {
             title: 'login'
         });
-    }
-    else {
+    } else {
         res.redirect('/');
     }
 };
-
