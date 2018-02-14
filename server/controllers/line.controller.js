@@ -1,7 +1,3 @@
-import {
-    userInfo
-} from 'os';
-
 var User = require('mongoose').model('User');
 var Follower = require('mongoose').model('Follower');
 var line = require('node-line-bot-api');
