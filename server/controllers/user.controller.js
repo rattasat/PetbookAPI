@@ -21,7 +21,7 @@ exports.signup = function (req, res, next) {
         var user = new User(req.body);
         user.lineUserId = "null";
         user.lineStatus = "notActive";
-        user.verifyCode = (Math.floor(Math.random() * Math.floor(9999))).toString();
+        user.verifyCode = (Math.floor(1000 + Math.random() * 9000)).toString();
         console.log(user.verifyCode);
         user.save(function (err) {
             if (err) {
