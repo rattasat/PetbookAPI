@@ -14,6 +14,7 @@ exports.render = function(req, res) {
                     title: 'Petbook',
                     username: req.user.firstName,
                     lineStatus: req.user.lineStatus,
+                    verifyCode: req.user.verifyCode,
                     pets: pets
                 });
             }

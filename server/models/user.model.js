@@ -14,6 +14,7 @@ var UserSchema = new Schema({
     },
     lineUserId: String,
     lineStatus: String,
+    verifyCode: String,
     firstName: String,
     lastName: String,
     email: String,

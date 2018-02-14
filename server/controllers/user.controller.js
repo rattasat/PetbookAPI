@@ -2,7 +2,7 @@ var User = require('mongoose').model('User');
 
 exports.create = function (req, res, next) {
     var user = new User(req.body);
-
+    user.verifyCode = (Math.floor(Math.random() * Math.floor(9999))).toString();
     user.save(function (err) {
         if (err) {
             return next(err);
@@ -21,6 +21,8 @@ exports.signup = function (req, res, next) {
         var user = new User(req.body);
         user.lineUserId = "null";
         user.lineStatus = "notActive";
+        user.verifyCode = (Math.floor(Math.random() * Math.floor(9999))).toString();
+        console.log(user.verifyCode);
         user.save(function (err) {
             if (err) {
                 return res.redirect('/signup');

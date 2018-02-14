@@ -1,3 +1,7 @@
+import {
+    userInfo
+} from 'os';
+
 var User = require('mongoose').model('User');
 var Follower = require('mongoose').model('Follower');
 var line = require('node-line-bot-api');
@@ -25,57 +29,73 @@ exports.webhook = function (req, res, next) {
                     throw err;
                 }
             });
-            if (event.message.text.match(/^.* confirm$/)) {
+            if (event.message.text.match(/^.* [0-9]{4}$/)) {
                 var str = event.message.text.split(" ");
                 var username = str[0];
+                var verifyCode = str[1];
                 User.findOne({
-                        username: username
-                    }, 'username lineUserId lineStatus',
-                    function (err, thisUser) {
+                        username: username,
+                        verifyCode: verifyCode
+                    }, 'username verifyCode lineStatus',
+                    function (err, userverify) {
                         if (err) {
-                            throw err;
-                        } else {
-                            if (!thisUser) {
+                            line.client
+                                .replyMessage({
+                                    replyToken: event.replyToken,
+                                    messages: [{
+                                        type: 'text',
+                                        text: 'เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่ภายหลัง'
+                                    }]
+                                });
+                            // throw err;
+                        } else if (userverify) {
+                            if (userverify.lineStatus == "notActive") {
+                                User.findOneAndUpdate({
+                                    username: username
+                                }, {
+                                    lineUserId: event.source.userId,
+                                    lineStatus: "active"
+                                }, function (err) {
+                                    if (err) {
+                                        line.client
+                                            .replyMessage({
+                                                replyToken: event.replyToken,
+                                                messages: [{
+                                                    type: 'text',
+                                                    text: 'เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่ภายหลัง'
+                                                }]
+                                            });
+                                        // throw err;
+                                    } else {
+                                        line.client
+                                            .replyMessage({
+                                                replyToken: event.replyToken,
+                                                messages: [{
+                                                    type: 'text',
+                                                    text: 'ทำการยืนยันตัวตนสำหรับ ' + username + ' เรียบร้อยแล้ว'
+                                                }]
+                                            });
+                                    }
+                                });
+                            } else {
                                 line.client
                                     .replyMessage({
                                         replyToken: event.replyToken,
                                         messages: [{
                                             type: 'text',
-                                            text: 'ไม่พบ ' + username
+                                            text: username + ' ได้ทำการยืนยันตัวตนก่อนหน้านี้แล้ว'
                                         }]
                                     });
-                            } else {
-                                if (thisUser.lineStatus == "active") {
-                                    line.client
-                                        .replyMessage({
-                                            replyToken: event.replyToken,
-                                            messages: [{
-                                                type: 'text',
-                                                text: username + ' ได้ทำการยืนยันตัวตนก่อนหน้านี้แล้ว'
-                                            }]
-                                        });
-                                } else if (thisUser.lineStatus == "notActive") {
-                                    User.findOneAndUpdate({
-                                        username: username
-                                    }, {
-                                        lineUserId: event.source.userId,
-                                        lineStatus: "active"
-                                    }, function (err) {
-                                        if (err) {
-                                            throw err;
-                                        } else {
-                                            line.client
-                                                .replyMessage({
-                                                    replyToken: event.replyToken,
-                                                    messages: [{
-                                                        type: 'text',
-                                                        text: 'ทำการยืนยันตัวตนสำหรับ ' + username + ' เรียบร้อยแล้ว'
-                                                    }]
-                                                });
-                                        }
-                                    });
-                                }
                             }
+                        } else if (!userverify) {
+                            line.client
+                                .replyMessage({
+                                    replyToken: event.replyToken,
+                                    messages: [{
+                                        type: 'text',
+                                        text: 'โปรดตรวจสอบ username และ verify code'
+                                    }]
+                                });
                         }
                     });
             }
