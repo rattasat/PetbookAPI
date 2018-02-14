@@ -9,6 +9,8 @@ module.exports = function(app) {
     app.param('pet', pet.saveLocation);
     app.get('/pet/:ownpet', pet.renderOwnPet);
     app.param('ownpet', pet.getOwnPet);
+    app.get('/report/:reportpet', pet.renderreport);
+    app.param('reportpet', pet.getpet)
     app.post('/api/getLocation', pet.getLocation);
 };
 

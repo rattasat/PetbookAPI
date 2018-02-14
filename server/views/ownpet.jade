@@ -21,10 +21,17 @@ html
                         li Age: #{jsdata.pet.age}
                     if jsdata.pet.remarkable
                         li Remarkable: #{jsdata.pet.remarkable}
+                    if (jsdata.pet.lostStatus == '1')
+                        li LostStatus: lost
+                    else 
+                        li LostStatus: not lost
+                            
                     img(id="qrcode", src='', alt='')
                     input(type="hidden", id="petid", value=jsdata.pet._id)
                     input(type="hidden", id="qrurl", value=jsdata.qrcode.url)
             a(href="/" + jsdata.pet._id) go to #{jsdata.pet.name}
+            br
+            a(href="/report/" + jsdata.pet._id) Report
             div
                 input#SDate(type='datetime-local')
                 input#FDate(type='datetime-local')

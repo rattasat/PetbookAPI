@@ -117,7 +117,7 @@ exports.renderOwnPet = function (req, res) {
     if (!req.user) {
         res.redirect('/login');
     } else {
-        console.log(req.jsdata);
+        // console.log(req.jsdata);
         res.render('ownpet', {
             title: "pet",
             jsdata: req.jsdata
@@ -185,4 +185,31 @@ exports.getLocation = function (req, res, next) {
                 res.send(result);
             }
         });
+}
+
+exports.renderreport = function (req, res) {
+    console.log(req.pet);
+    if (req.user) {
+        res.render('report', {
+            pet: req.pet
+        });
+    }
+}
+
+exports.getpet = function (req, res, next, reportpet) {
+    if (req.user) {
+        Pet.findOne({
+                _id: reportpet
+            }, '-username -deleteFlag',
+            function (err, pet) {
+                if (err) {
+                    throw err;
+                } else {
+                    req.pet = pet;
+                    next();
+                }
+            });
+    } else {
+        res.redirect('/login');
+    }
 }

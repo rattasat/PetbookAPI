@@ -13,7 +13,7 @@ exports.render = function(req, res) {
                 res.render('index', {
                     title: 'Petbook',
                     username: req.user.firstName,
-                    lineUserId: req.user.lineUserId,
+                    lineStatus: req.user.lineStatus,
                     pets: pets
                 });
             }

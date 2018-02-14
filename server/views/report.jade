@@ -1,0 +1,18 @@
+doctype html
+html
+    head 
+        title= "report"
+    body
+        div
+            div
+                ul
+                    li Type: #{pet.type}
+                    li Name: #{pet.name} 
+                    if (pet.gender) 
+                        li Gender: #{pet.gender}
+                    if (pet.age) 
+                        li Age: #{pet.age}
+                    if (pet.remarkable) 
+                        li Remarkable: #{pet.remarkable}
+            div
+                textarea(id="message", cols="30", rows="10")
