@@ -21,8 +21,14 @@ exports.signup = function (req, res, next) {
         var user = new User(req.body);
         user.lineUserId = "null";
         user.lineStatus = "notActive";
-        user.verifyCode = (Math.floor(1000 + Math.random() * 9000)).toString();
-        console.log(user.verifyCode);
+        // user.verifyCode = (Math.floor(1000 + Math.random() * 9000)).toString();
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        for (var i = 0; i < 5; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        user.verifyCode = text;
+        // console.log(user.verifyCode);
         user.save(function (err) {
             if (err) {
                 return res.redirect('/signup');
