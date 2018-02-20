@@ -2,7 +2,7 @@ var User = require('mongoose').model('User');
 var Follower = require('mongoose').model('Follower');
 var line = require('node-line-bot-api');
 var config = require('../../config/config');
-
+var cron = require('node-cron');
 
 line.init({
     accessToken: config.accessToken,
@@ -174,3 +174,33 @@ exports.pushmessage = function (lineUserId, message) {
             }]
         });
 };
+
+
+var cronTime = '00 46 18 * * *';//
+// var cronTime = '50 * * * * *'; //every 1 minute
+cron.schedule(cronTime, function () {
+    // console.log('running every minute 1, 2, 4 and 5');
+    Follower.find({}, 'lineUserId -_id', function (err, lineId) {
+        if (err) {
+            throw err;
+        } else {
+            // console.log(lineId);
+            var l;
+            var lineUserIds = [];
+            for (l in lineId) {
+                lineUserIds.push(lineId[l].lineUserId);
+                // console.log(lineId[l]);
+            }
+            // console.log(lineUserIds);
+            line.client
+                .multicast({
+                    // to: ["U73b859add2b1785d6dff8ad7d886127d", "U01a90c71f17da92b8074545fb2a7d109"],
+                    to: lineUserIds,
+                    messages: [{
+                        'type': "text",
+                        'text': 'test'
+                    }]
+                });
+        }
+    });
+});
