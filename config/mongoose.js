@@ -13,7 +13,7 @@ module.exports = function () {
     require('../server/models/petinlocation.model');
     require('../server/models/follower.model');
     require('../server/models/report.model');
-    require('../server/models/Config.model');
+    require('../server/models/config.model');
     
     return db;
 };
