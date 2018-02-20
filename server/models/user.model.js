@@ -15,6 +15,8 @@ var UserSchema = new Schema({
     lineUserId: String,
     lineStatus: String,
     verifyCode: String,
+    latitude: String,
+    longitude: String,
     firstName: String,
     lastName: String,
     email: String,

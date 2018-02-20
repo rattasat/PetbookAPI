@@ -2,6 +2,7 @@ var User = require('mongoose').model('User');
 var Follower = require('mongoose').model('Follower');
 var line = require('node-line-bot-api');
 var config = require('../../config/config');
+var cron = require('node-cron');
 
 
 line.init({
@@ -130,7 +131,7 @@ exports.webhook = function (req, res, next) {
                                 },
                                 {
                                     type: 'text',
-                                    text: 'หากท่านทำการสมัครสมาชิกกับทางเว็บไซต์เรียบร้อยแล้วกรุณาทำการยืนยันตัวตนโดยการ พิมพ์ username เว้นวรรค แล้วตามด้วย verify code 4หลัก ที่ได้มาจากเว็บไซต์  เช่น "petbookuser 1234" '
+                                    text: 'หากท่านทำการสมัครสมาชิกกับทางเว็บไซต์เรียบร้อยแล้วกรุณาทำการยืนยันตัวตนโดยการ พิมพ์ username เว้นวรรค แล้วตามด้วย verify code 5 หลัก ที่ได้มาจากเว็บไซต์  เช่น "petbookuser 12abc" '
                                 }
                             ]
                         });
@@ -163,6 +164,21 @@ exports.webhook = function (req, res, next) {
             success: true
         }));
 };
+
+// var cronTime = '*/1 * * * *'; //every 1 munite
+var cronTime = '30 25 17 * * *'; //every 
+
+cron.schedule(cronTime, function () {
+    // console.log('running a task every one minutes');
+    line.client
+        .pushMessage({
+            to: 'U73b859add2b1785d6dff8ad7d886127d',
+            messages: [{
+                "type": "text",
+                "text": 'test'
+            }]
+        });
+});
 
 exports.pushmessage = function (lineUserId, message) {
     line.client

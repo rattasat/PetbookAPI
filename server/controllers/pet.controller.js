@@ -1,6 +1,7 @@
 var Pet = require('mongoose').model('Pet');
 var User = require('mongoose').model('User');
 var PetInlocation = require('mongoose').model('PetInLocation');
+var Report = require('mongoose').model('Report');
 var line = require('./line.controller');
 var config = require('../../config/config');
 
@@ -9,7 +10,7 @@ exports.insertpet = function (req, res, next) {
         res.redirect('/login');
     } else {
         var pet = new Pet(req.body);
-        pet.lostStatus = "1";
+        pet.lostStatus = "0";
         pet.username = req.user.username;
 
         pet.save(function (err) {
@@ -209,6 +210,46 @@ exports.getpet = function (req, res, next, reportpet) {
                     next();
                 }
             });
+    } else {
+        res.redirect('/login');
+    }
+}
+
+exports.report = function (req, res) {
+    if (req.user) {
+        // console.log(req.body);
+        // res.send({message: 'error'});
+        var username = req.user.username;
+        var petId = req.body.petId;
+        var message = req.body.message;
+        var report = new Report({
+            username: username,
+            petId: petId,
+            message: message
+        });
+        report.save(function (err) {
+            if (err) {
+                res.send({
+                    message: 'error'
+                });
+            } else {
+                Pet.findOneAndUpdate({
+                    _id: petId
+                }, {
+                    lostStatus: '1'
+                }, function (err) {
+                    if (err) {
+                        res.send({
+                            message: 'error'
+                        });
+                    } else {
+                        res.send({
+                            message: 'success'
+                        });
+                    }
+                });
+            }
+        });
     } else {
         res.redirect('/login');
     }

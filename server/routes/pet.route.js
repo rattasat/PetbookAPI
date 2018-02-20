@@ -12,5 +12,6 @@ module.exports = function(app) {
     app.get('/report/:reportpet', pet.renderreport);
     app.param('reportpet', pet.getpet)
     app.post('/api/getLocation', pet.getLocation);
+    app.post('/api/report', pet.report);
 };
 
