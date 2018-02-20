@@ -165,21 +165,6 @@ exports.webhook = function (req, res, next) {
         }));
 };
 
-// // var cronTime = '*/1 * * * *'; //every 1 munite
-// var cronTime = '30 25 17 * * *'; //every 
-
-// cron.schedule(cronTime, function () {
-//     // console.log('running a task every one minutes');
-//     line.client
-//         .pushMessage({
-//             to: 'U73b859add2b1785d6dff8ad7d886127d',
-//             messages: [{
-//                 "type": "text",
-//                 "text": 'test'
-//             }]
-//         });
-// });
-
 exports.pushmessage = function (lineUserId, message) {
     line.client
         .pushMessage({
