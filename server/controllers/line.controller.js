@@ -2,7 +2,6 @@ var User = require('mongoose').model('User');
 var Follower = require('mongoose').model('Follower');
 var line = require('node-line-bot-api');
 var config = require('../../config/config');
-var cron = require('node-cron');
 
 
 line.init({
