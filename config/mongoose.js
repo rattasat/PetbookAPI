@@ -8,7 +8,7 @@ module.exports = function () {
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
-    require('../server/models/Config.model');
+    // require('../server/models/Config.model');
     require('../server/models/user.model');
     require('../server/models/pet.model');
     require('../server/models/petinlocation.model');
