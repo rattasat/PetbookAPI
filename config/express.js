@@ -33,6 +33,7 @@ module.exports = function() {
     require('../server/routes/index.route')(app);
     require('../server/routes/pet.route')(app);
     require('../server/routes/line.route')(app);
+    require('../server/routes/lostpet.route')(app);
     app.use(express.static('./public'));
     return app;
 };
