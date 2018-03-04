@@ -1,67 +1,100 @@
 var User = require('mongoose').model('User');
-
-exports.create = function (req, res, next) {
-    var user = new User(req.body);
-    user.verifyCode = (Math.floor(Math.random() * Math.floor(9999))).toString();
-    user.save(function (err) {
-        if (err) {
-            return next(err);
-        } else {
-            var response = {
-                result: "ok",
-                message: user
-            };
-            res.json(response);
-        }
-    });
-};
+var config = require('../../config/config');
 
 exports.signup = function (req, res, next) {
-    if (!req.user) {
-        var user = new User(req.body);
-        user.lineUserId = "null";
-        user.lineStatus = "notActive";
-        // user.verifyCode = (Math.floor(1000 + Math.random() * 9000)).toString();
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        for (var i = 0; i < 5; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
+    var user = new User(req.body);
+    user.save(function (err, user) {
+        if (err) {
+            return res
+                .status(500)
+                .json({
+                    auth: false,
+                    message: 'server error'
+                });
         }
-        user.verifyCode = text;
-        // console.log(user.verifyCode);
-        user.save(function (err) {
-            if (err) {
-                return res.redirect('/signup');
-            }
-            req.login(user, function (err) {
-                if (err) {
-                    return next(err);
-                }
-                return res.redirect('/');
+        var token = user.genToKen(user.username);
+        res
+            .header('Authorization', 'Bearer ' + token)
+            .status(201)
+            .json({
+                message: 'created'
             });
-        });
-    } else {
-        return res.redirect('/');
-    }
-};
-
-exports.logout = function (req, res) {
-    req.logout();
-    res.redirect('/');
-};
-
-exports.renderSignup = function (req, res) {
-    res.render('signup', {
-        title: 'signup'
     });
-};
+}
 
-exports.renderLogin = function (req, res) {
-    if (!req.user) {
-        res.render('login', {
-            title: 'login'
+exports.login = function (req, res) {
+    User.findOne({
+        username: req.body.username
+    }, function (err, user) {
+        if (err) {
+            return res
+                .status(500)
+                .json({
+                    message: 'server error'
+                });
+        }
+        if (!user) {
+            return res
+                .status(404)
+                .json({
+                    message: 'not found'
+                });
+        }
+        if (!user.authenticate(req.body.password)) {
+            return res
+                .status(401)
+                .json({
+                    message: 'unauthorized'
+                });
+        }
+        var token = user.genToKen(user.username);
+        res
+            .header('Authorization', 'Bearer ' + token)
+            .status(200)
+            .json({
+                message: 'ok'
+            });
+    });
+}
+
+exports.getUser = function (req, res) {
+    User.findOne({
+            username: req.username
+        }, 'username lineStatus verifyCode firstName lastName tel email',
+        function (err, user) {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    });
+            }
+            res
+                .status(200)
+                .json({
+                    message: 'ok',
+                    user: user
+                });
         });
-    } else {
-        res.redirect('/');
-    }
-};
+}
+
+exports.updateUser = function (req, res) {
+    User.findOneAndUpdate({
+            username: req.username
+        }, req.body,
+        function (err, user) {
+            if (err) {
+                return res
+                    .status(500)
+                    .res.json({
+                        message: 'server error'
+                    });
+            }
+            res
+                .status(200)
+                .json({
+                    message: 'ok'
+                });
+
+        });
+}

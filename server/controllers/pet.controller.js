@@ -5,44 +5,79 @@ var Report = require('mongoose').model('Report');
 var line = require('./line.controller');
 var config = require('../../config/config');
 
-exports.insertpet = function (req, res, next) {
-    if (!req.user) {
-        res.redirect('/login');
-    } else {
-        var pet = new Pet(req.body);
-        pet.lostStatus = "0";
-        pet.username = req.user.username;
-
-        pet.save(function (err) {
+exports.getPetList = function (req, res) {
+    Pet.find({
+            username: req.username
+        }, '_id name image',
+        function (err, pets) {
             if (err) {
-                return next(err);
-            } else {
-                res.redirect('/');
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    });
             }
+            if (pets.length == 0) {
+                return res
+                    .status(200)
+                    .json({
+                        message: 'no pet'
+                    });
+            }
+            return res
+                .status(200)
+                .json({
+                    message: 'ok',
+                    pets
+                });
         });
-    }
-};
+}
 
-exports.renderCreatepet = function (req, res) {
-    if (!req.user) {
-        res.render('login', {
-            title: 'login'
-        });
-    } else {
-        res.render('createpet', {
-            title: 'createpet'
-        });
-    }
-};
+exports.createPet = function (req, res) {
+    var pet = new Pet(req.body);
+    pet.username = req.username;
+    pet.save(function (err) {
+        if (err) {
+            res
+                .status(500)
+                .json({
+                    message: 'server error'
+                });
+        }
+        res
+            .status(201)
+            .json({
+                message: 'created'
+            });
+    });
+}
 
-exports.renderPet = function (req, res) {
-    if (req.pet && req.user) {
-        res.render('petview', {
-            title: 'pet',
-            user: req.user,
-            pet: req.pet
+exports.updatePet = function (req, res) {
+    Pet.findOneAndUpdate({
+            _id: req.params.petid,
+            username: req.username
+        }, req.body,
+        function (err, pet) {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    })
+            }
+            if (!pet) {
+                return res
+                    .status(404)
+                    .json({
+                        message: 'not found'
+                    });
+            }
+            res
+                .status(200)
+                .json({
+                    message: 'ok'
+                });
         });
-    }
 }
 
 exports.petById = function (req, res, next, petid) {
@@ -67,10 +102,6 @@ exports.petById = function (req, res, next, petid) {
                     });
             }
         });
-};
-
-exports.renderSuccess = function (req, res) {
-    res.send(req.result.message);
 };
 
 exports.saveLocation = function (req, res, next, pet) {
@@ -112,18 +143,6 @@ exports.saveLocation = function (req, res, next, pet) {
             next();
         }
     });
-};
-
-exports.renderOwnPet = function (req, res) {
-    if (!req.user) {
-        res.redirect('/login');
-    } else {
-        // console.log(req.jsdata);
-        res.render('ownpet', {
-            title: "pet",
-            jsdata: req.jsdata
-        });
-    }
 };
 
 exports.getOwnPet = function (req, res, next, ownpet) {
@@ -187,15 +206,6 @@ exports.getLocation = function (req, res, next) {
                 res.send(result);
             }
         });
-}
-
-exports.renderreport = function (req, res) {
-    console.log(req.pet);
-    if (req.user) {
-        res.render('report', {
-            pet: req.pet
-        });
-    }
 }
 
 exports.getpet = function (req, res, next, reportpet) {

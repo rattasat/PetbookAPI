@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
-var crypto = require('crypto');
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 var Schema = mongoose.Schema;
+var config = require('../../config/config');
 
 var UserSchema = new Schema({
     username: {
@@ -9,9 +11,6 @@ var UserSchema = new Schema({
         trim: true
     },
     password: String,
-    salt: {
-        type: String
-    },
     lineUserId: String,
     lineStatus: String,
     verifyCode: String,
@@ -25,19 +24,39 @@ var UserSchema = new Schema({
 });
 
 UserSchema.pre('save', function (next) {
-    if (this.password) {
-        this.salt = new Buffer(crypto.randomBytes(16).toString('base64'), 'base64');
-        this.password = this.hashPassword(this.password);
-    }
+    this.password = this.hashPassword(this.password);
+    this.tel = 'null';
+    this.email = 'null';
+    this.lineUserId = 'null';
+    this.lineStatus = 'not active';
+    this.verifyCode = this.VerifyCode();
+    this.role = 'user';
     next();
 });
 
 UserSchema.methods.hashPassword = function (password) {
-    return crypto.pbkdf2Sync(password, this.salt, 100000, 64, "sha512").toString('base64');
+    return bcrypt.hashSync(password, 8);
 };
 
+UserSchema.methods.VerifyCode = function () {
+    var text = '';
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < 5; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
 UserSchema.methods.authenticate = function (password) {
-    return this.password === this.hashPassword(password);
+    return bcrypt.compareSync(password, this.password);
 };
+
+UserSchema.methods.genToKen = function (username) {
+    return jwt.sign({
+        sub: username
+    }, config.secret, {
+        expiresIn: '1h'
+    });
+}
 
 mongoose.model('User', UserSchema);

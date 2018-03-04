@@ -1,14 +1,9 @@
 var user = require('../controllers/user.controller');
-var passport = require('passport');
+var authorization = require('../middlewares/authorization');
 
-module.exports = function(app) {
-    app.get('/signup', user.renderSignup);
-    app.get('/login', user.renderLogin);
-    app.post('/api/logout', user.logout);
+module.exports = function (app) {
     app.post('/api/signup', user.signup);
-    app.post('/api/login', passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login'
-    }));
-
+    app.post('/api/login', user.login);
+    app.get('/api/user', authorization.verifyAuthor, user.getUser);
+    app.post('/api/updateuser', authorization.verifyAuthor, user.updateUser);
 };

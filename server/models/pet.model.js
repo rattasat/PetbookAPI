@@ -9,8 +9,12 @@ var PetSchema = new Schema({
     age: String,
     image: String,
     remarkable: String,
-    lostStatus: String,
-    deleteFlag: Boolean
+    lostStatus: Boolean
+});
+
+PetSchema.pre('save', function (next) {
+    this.lostStatus = '0';
+    next();
 });
 
 mongoose.model('Pet', PetSchema);
