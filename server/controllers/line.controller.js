@@ -29,7 +29,7 @@ exports.webhook = function (req, res, next) {
                     throw err;
                 }
             });
-            if (event.message.text.match(/^.* [0-9]{4}$/)) {
+            if (event.message.text.match(/^.* [A-Za-z0-9]{5}$/)) {
                 var str = event.message.text.split(" ");
                 var username = str[0];
                 var verifyCode = str[1];

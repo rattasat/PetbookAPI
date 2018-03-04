@@ -17,7 +17,7 @@ exports.getPetList = function (req, res) {
                         message: 'server error'
                     });
             }
-            if (pets.length == 0) {
+            if (!pets) {
                 return res
                     .status(200)
                     .json({
@@ -29,6 +29,35 @@ exports.getPetList = function (req, res) {
                 .json({
                     message: 'ok',
                     pets
+                });
+        });
+}
+
+exports.getPet = function (req, res) {
+    Pet.findOne({
+            _id: req.params.petid,
+            username: req.username
+        },
+        function (err, pet) {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    });
+            }
+            if (!pet) {
+                return res
+                    .status(404)
+                    .json({
+                        message: 'not found'
+                    });
+            }
+            res
+                .status(200)
+                .json({
+                    message: 'ok',
+                    pet: pet
                 });
         });
 }
@@ -78,6 +107,35 @@ exports.updatePet = function (req, res) {
                     message: 'ok'
                 });
         });
+}
+
+exports.deletePet = function (req, res) {
+    Pet.findOneAndRemove({
+            _id: req.params.petid,
+            username: req.username
+        },
+        function (err, pet) {
+            if (err) {
+                // console.log(err);
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    });
+            }
+            if (!pet) {
+                return res
+                    .status(404)
+                    .json({
+                        message: 'not found'
+                    });
+            }
+            res
+                .status(200)
+                .json({
+                    message: 'ok'
+                });
+        })
 }
 
 exports.petById = function (req, res, next, petid) {

@@ -11,17 +11,23 @@ var UserSchema = new Schema({
         trim: true
     },
     password: String,
-    lineUserId: String,
-    lineStatus: String,
-    verifyCode: String,
-    latitude: String,
-    longitude: String,
     firstName: String,
     lastName: String,
-    email: String,
     tel: String,
-    role: String
+    email: String,
+    lineUserId: String,
+    lineStatus: String,
+    verifyCode: String
+    // latitude: String,
+    // longitude: String
 });
+
+// {
+// 	"username": "",
+// 	"password": "",
+// 	"firstName": "",
+// 	"lastName": ""
+// }
 
 UserSchema.pre('save', function (next) {
     this.password = this.hashPassword(this.password);
@@ -30,7 +36,6 @@ UserSchema.pre('save', function (next) {
     this.lineUserId = 'null';
     this.lineStatus = 'not active';
     this.verifyCode = this.VerifyCode();
-    this.role = 'user';
     next();
 });
 

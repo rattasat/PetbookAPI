@@ -8,12 +8,23 @@ var PetSchema = new Schema({
     gender: String,
     age: String,
     image: String,
-    remarkable: String,
+    remark: String,
     lostStatus: Boolean
 });
 
+// {
+// 	"type": "",
+// 	"name": "",
+// 	"gender": "",
+// 	"age": "",
+// 	"image": "",
+// 	"remark": ""
+// }
+
+
 PetSchema.pre('save', function (next) {
-    this.lostStatus = '0';
+    this.image = 'null';
+    this.lostStatus = false;
     next();
 });
 

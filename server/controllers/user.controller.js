@@ -1,14 +1,13 @@
 var User = require('mongoose').model('User');
 var config = require('../../config/config');
 
-exports.signup = function (req, res, next) {
+exports.createUser = function (req, res, next) {
     var user = new User(req.body);
     user.save(function (err, user) {
         if (err) {
             return res
                 .status(500)
                 .json({
-                    auth: false,
                     message: 'server error'
                 });
         }
