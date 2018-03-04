@@ -9,7 +9,6 @@ exports.verifyAuthor = function (req, res, next) {
         return res
             .status(403)
             .json({
-                auth: false,
                 message: 'no token'
             })
     }
