@@ -49,7 +49,7 @@ exports.webhook = function (req, res, next) {
                                 });
                             // throw err;
                         } else if (userverify) {
-                            if (userverify.lineStatus == "notActive") {
+                            if (userverify.lineStatus == "not active") {
                                 User.findOneAndUpdate({
                                     username: username
                                 }, {
