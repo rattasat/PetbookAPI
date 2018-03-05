@@ -23,7 +23,7 @@ var PetSchema = new Schema({
 
 
 PetSchema.pre('save', function (next) {
-    this.image = 'null';
+    this.image = null;
     this.lostStatus = false;
     next();
 });

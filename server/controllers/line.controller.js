@@ -47,7 +47,6 @@ exports.webhook = function (req, res, next) {
                                         text: 'เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่ภายหลัง'
                                     }]
                                 });
-                            // throw err;
                         } else if (userverify) {
                             if (userverify.lineStatus == "not active") {
                                 User.findOneAndUpdate({
@@ -65,7 +64,6 @@ exports.webhook = function (req, res, next) {
                                                     text: 'เกิดข้อผิดพลาดของระบบ กรุณาลองใหม่ภายหลัง'
                                                 }]
                                             });
-                                        // throw err;
                                     } else {
                                         line.client
                                             .replyMessage({

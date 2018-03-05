@@ -51,3 +51,35 @@ exports.getlostpet = async function (req, res) {
     }
     res.send(obj);
 }
+
+exports.reportPet = function (req, res) {
+    var report = new Report(req.body);
+    Pet.findOneAndUpdate({
+            _id: req.petid
+        }, {
+            lostStatus: true
+        },
+        function (err) {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    });
+            }
+            report.save(function (err) {
+                if (err) {
+                    return res
+                        .status(500)
+                        .json({
+                            message: 'server error'
+                        });
+                }
+                res
+                    .status(200)
+                    .json({
+                        message: 'ok'
+                    });
+            });
+        });
+}

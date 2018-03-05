@@ -24,24 +24,25 @@ exports.verifyAuthor = function (req, res, next) {
                 });
         }
         User.findOne({
-            username: decoded.sub
-        }, function (err, user) {
-            if (err) {
-                return res
-                    .status(500)
-                    .json({
-                        message: 'server error'
-                    });
-            }
-            if (!user) {
-                return res
-                    .status(404)
-                    .json({
-                        message: 'not found'
-                    });
-            }
-            req.username = user.username;
-            next();
-        });
+                username: decoded.sub
+            }, 'username',
+            function (err, user) {
+                if (err) {
+                    return res
+                        .status(500)
+                        .json({
+                            message: 'server error'
+                        });
+                }
+                if (!user) {
+                    return res
+                        .status(404)
+                        .json({
+                            message: 'not found user'
+                        });
+                }
+                req.username = user.username;
+                next();
+            });
     });
 }
