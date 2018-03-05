@@ -36,7 +36,7 @@ exports.getPetList = function (req, res) {
 exports.getPet = function (req, res) {
     Pet.findOne({
             _id: req.petid
-        },
+        }, '-__v',
         function (err, pet) {
             if (err) {
                 return res

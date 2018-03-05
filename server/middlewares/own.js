@@ -3,7 +3,7 @@ var Pet = require('mongoose').model('Pet');
 exports.isOwn = function (req, res, next) {
     Pet.findOne({
             _id: req.params.petid
-        }, '_id',
+        }, '_id username',
         function (err, pet) {
             if (err) {
                 return res
@@ -20,6 +20,25 @@ exports.isOwn = function (req, res, next) {
                     });
             }
             req.petid = pet._id;
+            next();
+        });
+}
+
+exports.own = function (req, res, next) {
+    Pet.findOne({
+            _id: req.params.petid
+        }, '_id username name',
+        function (err, pet) {
+            if (err) {
+                return res
+                    .status(404)
+                    .json({
+                        message: 'not found pet'
+                    });
+            }
+            req.petid = pet._id;
+            req.petname = pet.name;
+            req.username = pet.username;
             next();
         });
 }

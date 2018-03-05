@@ -1,35 +1,34 @@
 var PetInlocation = require('mongoose').model('PetInLocation');
 var Pet = require('mongoose').model('Pet');
-
+var User = require('mongoose').model('User');
+var line = require('./line.controller');
 exports.reportLocation = function (req, res) {
     var location = new PetInlocation(req.body);
     location.petid = req.params.petid;
-    // console.log(req.params.petid);
-    Pet.findOne({
-        _id: req.params.petid
-    }, function (err, pet) {
+    location.save(function (err) {
         if (err) {
-            console.log(err);
             return res
-                .status(404)
+                .status(500)
                 .json({
-                    message: 'not found pet'
+                    message: 'server error'
                 });
         }
-        location.save(function (err) {
-            if (err) {
-                return res
-                    .status(500)
-                    .json({
-                        message: 'server error'
-                    });
-            }
-            res
-                .status(200)
-                .json({
-                    message: 'ok'
-                });
-        });
+        res
+            .status(200)
+            .json({
+                message: 'ok'
+            });
+        User.findOne({
+                username: req.username
+            }, 'lineStatus lineUserId',
+            function (err, user) {
+                if (err) {
+                    throw err;
+                }
+                if (user.lineStatus == 'active') {
+                    line.pushmessage(user.lineUserId, 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์');
+                }
+            });
     });
 }
 
