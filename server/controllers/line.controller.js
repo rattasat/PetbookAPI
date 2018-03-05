@@ -173,48 +173,53 @@ exports.pushmessage = function (lineUserId, message) {
                 "text": message
             }]
         });
-};
+}
 
-// Config.findOne({}, 'cronTime -_id', function (err, config) {
-//     if (err) {
-//         throw err;
-//     } else {
-//         // console.log(config.cronTime);
-//         new CronJob({
-//             cronTime: config.cronTime,
-//             // cronTime: '05 * * * * *',
-//             onTick: async function () {
-//                 var followers = await Follower.find({}, 'lineUserId -_id');
-//                 if (followers.length > 0) {
-//                     var lineUserIds = [];
-//                     for (var i in followers) {
-//                         lineUserIds.push(followers[i].lineUserId);
-//                     }
-//                     var today = new Date();
-//                     var dd = today.getDate();
-//                     var mm = today.getMonth() + 1; //January is 0!
-//                     var yyyy = today.getFullYear();
-//                     if (dd < 10) {
-//                         dd = '0' + dd;
-//                     }
-//                     if (mm < 10) {
-//                         mm = '0' + mm;
-//                     }
-//                     today = dd + '/' + mm + '/' + yyyy;
-//                     var link = 'http://petbookthai.herokuapp.com/lostpets/' + today;
-//                     var message = 'แจ้งข่าวสัตว์หายประจำวันที่ ' + today + '\n' + link;
-//                     line.client
-//                         .multicast({
-//                             to: lineUserIds,
-//                             messages: [{
-//                                 "type": "text",
-//                                 "text": message
-//                             }]
-//                         });
-//                 }
-//             },
-//             start: true,
-//             timeZone: 'Asia/Bangkok'
-//         });
-//     }
-// });
+new CronJob({
+    cronTime: '*/20 * * * *',
+    onTick: async function () {
+        var config = await Config.findOne({}, 'cronTime');
+        console.log(config.cronTime);
+        startNoti(config.cronTime);
+    },
+    start: true,
+    timeZone: 'Asia/Bangkok'
+});
+
+function startNoti(cronTime) {
+    new CronJob({
+        cronTime: cronTime,
+        onTick: async function () {
+            var followers = await Follower.find({}, 'lineUserId -_id');
+            if (followers.length > 0) {
+                var lineUserIds = [];
+                for (var i in followers) {
+                    lineUserIds.push(followers[i].lineUserId);
+                }
+                var today = new Date();
+                var dd = today.getDate() - 1;
+                var mm = today.getMonth() + 1; //January is 0!
+                var yyyy = today.getFullYear();
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = dd + '/' + mm + '/' + yyyy;
+                var link = 'http://petbookthaiapi.herokuapp.com/lostpets/' + today;
+                var message = 'แจ้งข่าวสัตว์หายประจำวันที่ ' + today + '\n' + link;
+                line.client
+                    .multicast({
+                        to: lineUserIds,
+                        messages: [{
+                            "type": "text",
+                            "text": message
+                        }]
+                    });
+            }
+        },
+        start: true,
+        timeZone: 'Asia/Bangkok'
+    });
+}

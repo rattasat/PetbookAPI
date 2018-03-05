@@ -15,15 +15,12 @@ module.exports = function () {
         extended: true
     }));
     app.use(bodyParser.json());
-    // app.use(cors());
-
-    app.set('views', './server/views');
-    app.set('view engine', 'jade');
+    app.use(cors());
 
     require('../server/routes/user.route')(app);
     require('../server/routes/index.route')(app);
     require('../server/routes/pet.route')(app);
     require('../server/routes/line.route')(app);
-    app.use(express.static('./public'));
+
     return app;
 };
