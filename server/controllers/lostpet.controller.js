@@ -3,6 +3,7 @@ var Pet = require('mongoose').model('Pet');
 var Report = require('mongoose').model('Report');
 var Config = require('mongoose').model('Config');
 var async = require('async');
+var moment = require('moment');
 
 exports.getlostpet = async function (req, res) {
     var config = await Config.findOne({}, 'cronTime -_id');
@@ -54,6 +55,8 @@ exports.getlostpet = async function (req, res) {
 
 exports.reportPet = function (req, res) {
     var report = new Report(req.body);
+    report.petId = req.petid;
+    report.username = req.username;
     Pet.findOneAndUpdate({
             _id: req.petid
         }, {
@@ -81,5 +84,46 @@ exports.reportPet = function (req, res) {
                         message: 'ok'
                     });
             });
+        });
+}
+
+exports.getReportDaily = async function (req, res) {
+    var dateFormat = req.params.year + '-' + req.params.month + '-' + req.params.day;
+    var sDate = new Date(dateFormat);
+    sDate.setHours(00, 00, 00, 000);
+    var fDate = new Date(dateFormat);
+    fDate.setHours(23, 59, 59, 999);
+    var reports = await Report.find({
+        created: {
+            '$gte': sDate,
+            '$lt': fDate
+        }
+    });
+    if (reports.length == 0) {
+        return res
+            .status(200)
+            .json({
+                message: 'no report'
+            });
+    }
+    var rpt = [];
+    for (var i in reports) {
+        var pet = await Pet.findOne({
+            _id: reports[i].petId
+        }, '-username -lostStatus -__v');
+        var user = await User.findOne({
+            username: reports[i].username
+        }, 'firstName lastName email tel');
+        rpt.push({
+            text: reports[i].message,
+            pet: pet,
+            user: user
+        });
+    }
+    res
+        .status(200)
+        .json({
+            message: 'ok',
+            report: rpt
         });
 }

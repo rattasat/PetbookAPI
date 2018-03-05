@@ -2,12 +2,12 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var PetInLocationSchema = new Schema({
-    petid: String,
+    petId: String,
     latitude: String,
     longitude: String,
-    created: { 
+    created: {
         type: Date,
-        default: Date.now 
+        default: Date.now
     }
 });
 
