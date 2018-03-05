@@ -1,9 +1,4 @@
 var Pet = require('mongoose').model('Pet');
-var User = require('mongoose').model('User');
-var PetInlocation = require('mongoose').model('PetInLocation');
-var Report = require('mongoose').model('Report');
-var line = require('./line.controller');
-var config = require('../../config/config');
 
 exports.getPetList = function (req, res) {
     Pet.find({

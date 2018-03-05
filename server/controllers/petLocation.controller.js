@@ -1,10 +1,10 @@
 var PetInlocation = require('mongoose').model('PetInLocation');
-var Pet = require('mongoose').model('Pet');
 var User = require('mongoose').model('User');
 var line = require('./line.controller');
+
 exports.reportLocation = function (req, res) {
     var location = new PetInlocation(req.body);
-    location.petid = req.params.petid;
+    location.petId = req.params.petid;
     location.save(function (err) {
         if (err) {
             return res
@@ -66,7 +66,7 @@ exports.getLocation = function (req, res) {
 
 exports.getLastLocation = function (req, res) {
     PetInlocation.findOne({
-        petid: req.petid
+        petId: req.petid
     }).sort({
         'created': -1
     }).exec(function (err, location) {

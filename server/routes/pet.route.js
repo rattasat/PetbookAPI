@@ -15,4 +15,5 @@ module.exports = function (app) {
     app.get('/api/getlastlocation/:petid', authorization.verifyAuthor, own.isOwn, petLocation.getLastLocation);
     app.post('/api/reportlost/:petid', authorization.verifyAuthor, own.isOwn, lostpet.reportPet);
     app.get('/api/getreport/:day/:month/:year', lostpet.getReportDaily);
+    app.get('/api/reportlist', authorization.verifyAuthor, lostpet.getReportList);
 };

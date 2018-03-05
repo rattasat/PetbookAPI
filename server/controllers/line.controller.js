@@ -1,7 +1,5 @@
 var User = require('mongoose').model('User');
-var Pet = require('mongoose').model('Pet');
 var Follower = require('mongoose').model('Follower');
-var Report = require('mongoose').model('Report');
 var Config = require('mongoose').model('Config');
 var line = require('node-line-bot-api');
 var config = require('../../config/config');
