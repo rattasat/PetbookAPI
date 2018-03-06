@@ -5,15 +5,17 @@ var authorization = require('../middlewares/authorization');
 var own = require('../middlewares/own');
 
 module.exports = function (app) {
-    app.get('/api/petlist', authorization.verifyAuthor, pet.getPetList);
-    app.get('/api/pet/:petid', authorization.verifyAuthor, own.isOwn, pet.getPet);
-    app.post('/api/createpet', authorization.verifyAuthor, pet.createPet);
-    app.post('/api/updatepet/:petid', authorization.verifyAuthor, own.isOwn, pet.updatePet);
-    app.get('/api/deletepet/:petid', authorization.verifyAuthor, own.isOwn, pet.deletePet);
-    app.post('/api/reportlocation/:petid', own.own, petLocation.reportLocation);
-    app.post('/api/getlocation/:petid', authorization.verifyAuthor, own.isOwn, petLocation.getLocation);
-    app.get('/api/getlastlocation/:petid', authorization.verifyAuthor, own.isOwn, petLocation.getLastLocation);
-    app.post('/api/reportlost/:petid', authorization.verifyAuthor, own.isOwn, lostpet.reportPet);
-    app.get('/api/getreport/:day/:month/:year', lostpet.getReportDaily);
-    app.get('/api/reportlist', authorization.verifyAuthor, lostpet.getReportList);
+    app.get('/pet/petlist', authorization.verifyAuthor, pet.getPetList);
+    app.get('/pet/:petid', authorization.verifyAuthor, own.isOwn, pet.getPet);
+    app.post('/pet/create', authorization.verifyAuthor, pet.createPet);
+    app.post('/pet/update/:petid', authorization.verifyAuthor, own.isOwn, pet.updatePet);
+    app.get('/pet/delete/:petid', authorization.verifyAuthor, own.isOwn, pet.deletePet);
+    app.post('/location/get/:petid', authorization.verifyAuthor, own.isOwn, petLocation.getLocation);
+    app.get('/location/last/:petid', authorization.verifyAuthor, own.isOwn, petLocation.getLastLocation);
+    app.post('/report/create/:petid', authorization.verifyAuthor, own.isOwn, lostpet.reportPet);
+    app.get('/report/reportlist', authorization.verifyAuthor, lostpet.getReportList);
+
+    // Public API
+    app.post('/pub/location/:petid', own.own, petLocation.reportLocation);
+    app.get('/pub/report/:day/:month/:year', lostpet.getReportDaily);
 };
