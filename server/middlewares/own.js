@@ -12,6 +12,13 @@ exports.isOwn = function (req, res, next) {
                         message: 'not found pet'
                     });
             }
+            if (!pet) {
+                return res
+                    .status(404)
+                    .json({
+                        message: 'not found pet'
+                    });
+            }
             if (req.username != pet.username) {
                 return res
                     .status(401)
@@ -30,6 +37,13 @@ exports.own = function (req, res, next) {
         }, '_id username name',
         function (err, pet) {
             if (err) {
+                return res
+                    .status(404)
+                    .json({
+                        message: 'not found pet'
+                    });
+            }
+            if (!pet) {
                 return res
                     .status(404)
                     .json({

@@ -1,4 +1,5 @@
 var Pet = require('mongoose').model('Pet');
+var User = require('mongoose').model('User');
 
 exports.getPetList = function (req, res) {
     Pet.find({
@@ -105,4 +106,20 @@ exports.deletePet = function (req, res) {
                 message: 'ok'
             });
     });
+}
+
+exports.getPubPet = async function (req, res) {
+    var pet = await Pet.findOne({
+        _id: req.petid
+    }, '-username -lostStatus -__v');
+    var user = await User.findOne({
+        username: req.username
+    }, 'firstName lastName email tel -_id');
+    res
+        .status(200)
+        .json({
+            message: 'ok',
+            pet: pet,
+            user: user
+        });
 }

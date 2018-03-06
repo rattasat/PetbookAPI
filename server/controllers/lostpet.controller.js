@@ -89,7 +89,6 @@ exports.getReportList = async function (req, res) {
                 message: 'no report'
             });
     }
-    console.log(reports.length);
     var rpt = []
     for (var i in reports) {
         var pet = await Pet.findOne({

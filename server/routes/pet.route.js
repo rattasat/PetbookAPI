@@ -18,4 +18,5 @@ module.exports = function (app) {
     // Public API
     app.post('/pub/location/:petid', own.own, petLocation.reportLocation);
     app.get('/pub/report/:day/:month/:year', lostpet.getReportDaily);
+    app.get('/pub/pet/:petid', own.own, pet.getPubPet);
 };
