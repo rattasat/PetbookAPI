@@ -4,7 +4,6 @@ var config = require('../../config/config');
 
 exports.verifyAuthor = function (req, res, next) {
     var authHeader = req.header('Authorization');
-
     if (!authHeader) {
         return res
             .status(403)

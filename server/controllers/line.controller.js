@@ -168,10 +168,11 @@ exports.pushmessage = function (lineUserId, message) {
     line.client
         .pushMessage({
             to: lineUserId,
-            messages: [{
-                "type": "text",
-                "text": message
-            }]
+            // messages: [{
+            //     "type": "text",
+            //     "text": message
+            // }]
+            messages: message
         });
 }
 

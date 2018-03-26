@@ -11,9 +11,8 @@ module.exports = function (app) {
     app.post('/pet/update/:petid', authorization.verifyAuthor, own.isOwn, pet.updatePet);
     app.get('/pet/delete/:petid', authorization.verifyAuthor, own.isOwn, pet.deletePet);
     app.post('/location/get/:petid', authorization.verifyAuthor, own.isOwn, petLocation.getLocation);
-    app.get('/location/last/:petid', authorization.verifyAuthor, own.isOwn, petLocation.getLastLocation);
     app.post('/report/create/:petid', authorization.verifyAuthor, own.isOwn, lostpet.reportPet);
-    app.get('/report/reportlist', authorization.verifyAuthor, lostpet.getReportList);
+    app.get('/report/get/:petid', authorization.verifyAuthor, own.isOwn, lostpet.getReport);
 
     // Public API
     app.post('/pub/location/:petid', own.own, petLocation.reportLocation);

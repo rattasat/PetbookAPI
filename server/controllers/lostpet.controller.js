@@ -78,34 +78,74 @@ exports.getReportDaily = async function (req, res) {
         });
 }
 
-exports.getReportList = async function (req, res) {
-    var reports = await Report.find({
-        username: req.username
-    });
-    if (reports.length == 0) {
-        return res
-            .status(200)
-            .json({
-                message: 'no report'
-            });
-    }
-    var rpt = []
-    for (var i in reports) {
-        var pet = await Pet.findOne({
-            _id: reports[i].petId
-        }, '-username -lostStatus -__v');
-        rpt.push({
-            info: {
-                text: reports[i].message,
-                create: reports[i].created
-            },
-            pet: pet
-        });
-    }
-    res
-        .status(200)
-        .json({
-            message: 'ok',
-            report: rpt
+exports.getReport = async function (req, res) {
+    var pet = await Pet.findOne({
+        _id: req.petid
+    }, 'name')
+    Report.find({
+            petId: req.petid
+        }, 'petId message created',
+        function (err, reports) {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    })
+            }
+            if (reports.length == 0) {
+                return res
+                    .status(200)
+                    .json({
+                        message: 'no reports',
+                        pet: pet
+                    })
+            }
+            res
+                .status(200)
+                .json({
+                    message: 'ok',
+                    reports: reports,
+                    pet: pet
+                });
         });
 }
+
+// exports.getReport = async function (req, res) {
+//     if (req.params.petid == 'list') {
+//         var reports = await Report.find({
+//             username: req.username
+//         });
+//     } else {
+//         var reports = await Report.find({
+//             username: req.username,
+//             petId: req.body.petid
+//         });
+//     }
+//     if (reports.length == 0) {
+//         return res
+//             .status(200)
+//             .json({
+//                 message: 'no report'
+//             });
+//     }
+//     var rpt = []
+//     for (var i in reports) {
+//         var pet = await Pet.findOne({
+//             _id: reports[i].petId
+//         }, '-username -lostStatus -__v');
+//         rpt.push({
+//             info: {
+//                 text: reports[i].message,
+//                 create: reports[i].created
+//             },
+//             pet: pet
+//         });
+//     }
+//     res
+//         .status(200)
+//         .json({
+//             message: 'ok',
+//             report: rpt
+//         });
+// }

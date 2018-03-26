@@ -4,12 +4,15 @@ var Schema = mongoose.Schema;
 var PetSchema = new Schema({
     username: String,
     type: String,
+    breed: String,
     name: String,
     gender: String,
-    age: String,
+    ageYear: Number,
+    ageMonth: Number,
     image: String,
-    remark: String,
-    lostStatus: Boolean
+    color: String,
+    lostStatus: Boolean,
+    deleted: Boolean
 });
 
 // {
@@ -22,10 +25,10 @@ var PetSchema = new Schema({
 // }
 
 
-PetSchema.pre('save', function (next) {
-    this.image = null;
-    this.lostStatus = false;
-    next();
-});
+// PetSchema.pre('save', function (next) {
+//     this.image = null;
+//     this.lostStatus = false;
+//     next();
+// });
 
 mongoose.model('Pet', PetSchema);

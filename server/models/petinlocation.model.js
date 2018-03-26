@@ -3,8 +3,8 @@ var Schema = mongoose.Schema;
 
 var PetInLocationSchema = new Schema({
     petId: String,
-    latitude: String,
-    longitude: String,
+    latitude: Number,
+    longitude: Number,
     created: {
         type: Date,
         default: Date.now

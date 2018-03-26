@@ -3,7 +3,8 @@ var User = require('mongoose').model('User');
 
 exports.getPetList = function (req, res) {
     Pet.find({
-            username: req.username
+            username: req.username,
+            deleted: false
         }, '_id name image',
         function (err, pets) {
             if (err) {
@@ -53,9 +54,12 @@ exports.getPet = function (req, res) {
 exports.createPet = function (req, res) {
     var pet = new Pet(req.body);
     pet.username = req.username;
+    pet.image = null;
+    pet.lostStatus = false;
+    pet.deleted = false;
     pet.save(function (err) {
         if (err) {
-            res
+            return res
                 .status(500)
                 .json({
                     message: 'server error'
@@ -90,28 +94,31 @@ exports.updatePet = function (req, res) {
 }
 
 exports.deletePet = function (req, res) {
-    Pet.findOneAndRemove({
-        _id: req.petid
-    }, function (err) {
-        if (err) {
-            return res
-                .status(500)
+    Pet.findByIdAndUpdate({
+            _id: req.petid
+        }, {
+            deleted: true
+        },
+        function (err) {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    });
+            }
+            res
+                .status(200)
                 .json({
-                    message: 'server error'
+                    message: 'ok'
                 });
-        }
-        res
-            .status(200)
-            .json({
-                message: 'ok'
-            });
-    });
+        });
 }
 
 exports.getPubPet = async function (req, res) {
     var pet = await Pet.findOne({
         _id: req.petid
-    }, '-username -lostStatus -__v');
+    }, '-username -__v');
     var user = await User.findOne({
         username: req.username
     }, 'firstName lastName email tel -_id');

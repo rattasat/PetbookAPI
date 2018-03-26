@@ -11,6 +11,18 @@ module.exports = function () {
         app.use(morgan('dev'));
     }
 
+    // var allowCrossDomain = (req, res, next) => {
+    //     res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+    //     res.header("Access-Control-Allow-Credentials", true);
+    //     res.header("Access-Control-Allow-Methods", "POST,GET,OPTIONS,PUT,DELETE");
+    //     res.header(
+    //         "Access-Control-Allow-Headers",
+    //         "X-Requested-With, Origin, Authorization, Content-Type, Accept"
+    //     );
+    //     next();
+    // };
+
+    // app.use(allowCrossDomain);
     app.use(bodyParser.urlencoded({
         extended: true
     }));

@@ -32,34 +32,28 @@ exports.login = function (req, res) {
                     message: 'server error'
                 });
         }
-        if (!user) {
+        if (!user || !user.authenticate(req.body.password)) {
             return res
                 .status(404)
                 .json({
-                    message: 'not found'
-                });
-        }
-        if (!user.authenticate(req.body.password)) {
-            return res
-                .status(401)
-                .json({
-                    message: 'unauthorized'
+                    message: 'not found user'
                 });
         }
         var token = user.genToKen(user.username);
         res
-            .header('Authorization', 'Bearer ' + token)
             .status(200)
             .json({
-                message: 'ok'
-            });
+                message: 'ok',
+                auth: 'Bearer ' + token,
+                firstName: user.firstName
+            })
     });
 }
 
 exports.getUser = function (req, res) {
     User.findOne({
             username: req.username
-        }, 'username lineStatus verifyCode firstName lastName tel email',
+        }, 'username lineStatus verifyCode firstName lastName tel email -_id',
         function (err, user) {
             if (err) {
                 return res

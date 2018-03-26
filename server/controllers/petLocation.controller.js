@@ -1,10 +1,12 @@
 var PetInlocation = require('mongoose').model('PetInLocation');
 var User = require('mongoose').model('User');
 var line = require('./line.controller');
+var moment = require('moment');
 
 exports.reportLocation = function (req, res) {
     var location = new PetInlocation(req.body);
     location.petId = req.params.petid;
+
     location.save(function (err) {
         if (err) {
             return res
@@ -26,21 +28,29 @@ exports.reportLocation = function (req, res) {
                     throw err;
                 }
                 if (user.lineStatus == 'active') {
-                    line.pushmessage(user.lineUserId, 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์');
+                    message = [{
+                        'type': 'text',
+                        'text': 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์'
+                    }, {
+                        'type': 'location',
+                        'title': req.petname,
+                        'address': 'Location',
+                        'latitude': location.latitude,
+                        'longitude': location.longitude
+                    }];
+                    line.pushmessage(user.lineUserId, message);
                 }
             });
     });
 }
 
 exports.getLocation = function (req, res) {
-    PetInlocation.find({
-            petid: req.petid,
-            created: {
-                '$gte': new Date(req.body.sdate),
-                '$lt': new Date(req.body.fdate)
-            }
-        }, 'latitude longitude created',
-        function (err, location) {
+    if (req.body.sdate == null && req.body.fdate == null) {
+        PetInlocation.findOne({
+            petId: req.petid
+        }).sort({
+            'created': -1
+        }).exec(function (err, location) {
             if (err) {
                 return res
                     .status(500)
@@ -48,50 +58,55 @@ exports.getLocation = function (req, res) {
                         message: 'server error'
                     });
             }
-            if (location.length == 0) {
+            if (!location) {
                 return res
                     .status(200)
                     .json({
                         message: 'no location'
                     });
             }
-            res
+            return res
                 .status(200)
                 .json({
                     message: 'ok',
-                    location: location
+                    location: [{
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        created: location.created
+                    }]
                 });
         });
-}
-
-exports.getLastLocation = function (req, res) {
-    PetInlocation.findOne({
-        petId: req.petid
-    }).sort({
-        'created': -1
-    }).exec(function (err, location) {
-        if (err) {
-            return res
-                .status(500)
-                .json({
-                    message: 'server error'
-                });
-        }
-        if (!location) {
-            return res
-                .status(200)
-                .json({
-                    message: 'no location'
-                });
-        }
-        res
-            .status(200)
-            .json({
-                message: 'ok',
-                location: {
-                    latitude: location.latitude,
-                    longitude: location.longitude
+    } else {
+        sdate = req.body.sdate;
+        fdate = req.body.fdate;
+        PetInlocation.find({
+                petId: req.petid,
+                created: {
+                    '$gte': new Date(sdate),
+                    '$lt': new Date(fdate)
                 }
+            }, 'latitude longitude created',
+            function (err, location) {
+                if (err) {
+                    return res
+                        .status(500)
+                        .json({
+                            message: 'server error'
+                        });
+                }
+                if (location.length == 0) {
+                    return res
+                        .status(200)
+                        .json({
+                            message: 'no location'
+                        });
+                }
+                return res
+                    .status(200)
+                    .json({
+                        message: 'ok',
+                        location: location
+                    });
             });
-    });
+    }
 }

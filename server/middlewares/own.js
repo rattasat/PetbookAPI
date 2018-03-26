@@ -2,7 +2,8 @@ var Pet = require('mongoose').model('Pet');
 
 exports.isOwn = function (req, res, next) {
     Pet.findOne({
-            _id: req.params.petid
+            _id: req.params.petid,
+            deleted: false
         }, '_id username',
         function (err, pet) {
             if (err) {
@@ -33,7 +34,8 @@ exports.isOwn = function (req, res, next) {
 
 exports.own = function (req, res, next) {
     Pet.findOne({
-            _id: req.params.petid
+            _id: req.params.petid,
+            deleted: false
         }, '_id username name',
         function (err, pet) {
             if (err) {
