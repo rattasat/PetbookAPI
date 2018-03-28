@@ -13,10 +13,11 @@ exports.createUser = function (req, res, next) {
         }
         var token = user.genToKen(user.username);
         res
-            .header('Authorization', 'Bearer ' + token)
             .status(201)
             .json({
-                message: 'created'
+                message: 'created',
+                auth: 'Bearer ' + token,
+                firstName: user.firstName
             });
     });
 }
