@@ -31,8 +31,8 @@ var UserSchema = new Schema({
 
 UserSchema.pre('save', function (next) {
     this.password = this.hashPassword(this.password);
-    this.tel = null;
-    this.email = null;
+    // this.tel = null;
+    // this.email = null;
     this.lineUserId = null;
     this.lineStatus = 'not active';
     this.verifyCode = this.VerifyCode();
