@@ -80,7 +80,7 @@ exports.updateUser = function (req, res) {
             if (err) {
                 return res
                     .status(500)
-                    .res.json({
+                    .json({
                         message: 'server error'
                     });
             }

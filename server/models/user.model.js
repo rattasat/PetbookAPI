@@ -18,21 +18,10 @@ var UserSchema = new Schema({
     lineUserId: String,
     lineStatus: String,
     verifyCode: String
-    // latitude: String,
-    // longitude: String
 });
-
-// {
-// 	"username": "",
-// 	"password": "",
-// 	"firstName": "",
-// 	"lastName": ""
-// }
 
 UserSchema.pre('save', function (next) {
     this.password = this.hashPassword(this.password);
-    // this.tel = null;
-    // this.email = null;
     this.lineUserId = null;
     this.lineStatus = 'not active';
     this.verifyCode = this.VerifyCode();
@@ -60,7 +49,7 @@ UserSchema.methods.genToKen = function (username) {
     return jwt.sign({
         sub: username
     }, config.secret, {
-        expiresIn: '1h'
+        expiresIn: '24h'
     });
 }
 
