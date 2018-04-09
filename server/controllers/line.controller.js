@@ -176,16 +176,22 @@ exports.pushmessage = function (lineUserId, message) {
         });
 }
 
-// new CronJob({
-//     cronTime: '*/20 * * * *',
-//     onTick: async function () {
-//         var config = await Config.findOne({}, 'cronTime');
-//         console.log(config.cronTime);
-//         startNoti(config.cronTime);
-//     },
-//     start: true,
-//     timeZone: 'Asia/Bangkok'
-// });
+new CronJob({
+    cronTime: '0 0 */1 * * *',
+    // cronTime: '*/10 * * * * *',
+    onTick: function () {
+        line.client
+            .pushMessage({
+                to: 'U73b859add2b1785d6dff8ad7d886127d',
+                messages: [{
+                    "type": "text",
+                    "text": "test"
+                }]
+            });
+    },
+    start: true,
+    timeZone: 'Asia/Bangkok'
+});
 
 // function startNoti(cronTime) {
 //     new CronJob({

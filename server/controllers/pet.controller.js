@@ -5,7 +5,11 @@ exports.getPetList = function (req, res) {
     Pet.find({
             username: req.username,
             deleted: false
-        }, '_id name image',
+        }, '_id name image', {
+            sort: {
+                name: 1
+            }
+        },
         function (err, pets) {
             if (err) {
                 return res
