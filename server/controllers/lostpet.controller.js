@@ -38,15 +38,18 @@ exports.reportPet = function (req, res) {
 }
 
 exports.getReportDaily = async function (req, res) {
-    var dateFormat = req.params.year + '-' + req.params.month + '-' + req.params.day;
-    var sDate = new Date(dateFormat);
+    var sDate = new Date();
     sDate.setHours(00, 00, 00, 000);
-    var fDate = new Date(dateFormat);
+    var fDate = new Date(sDate);
     fDate.setHours(23, 59, 59, 999);
     var reports = await Report.find({
         created: {
             '$gte': sDate,
             '$lt': fDate
+        }
+    }, null, {
+        sort:{
+            created: -1
         }
     });
     if (reports.length == 0) {
@@ -60,7 +63,7 @@ exports.getReportDaily = async function (req, res) {
     for (var i in reports) {
         var pet = await Pet.findOne({
             _id: reports[i].petId
-        }, '-username -lostStatus -__v');
+        }, '-username -__v');
         var user = await User.findOne({
             username: reports[i].username
         }, 'firstName lastName email tel');
@@ -84,7 +87,11 @@ exports.getReport = async function (req, res) {
     }, 'name')
     Report.find({
             petId: req.petid
-        }, 'petId message created',
+        }, 'petId message created', {
+            sort: {
+                created: -1
+            }
+        },
         function (err, reports) {
             if (err) {
                 return res
