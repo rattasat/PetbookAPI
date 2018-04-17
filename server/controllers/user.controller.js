@@ -1,7 +1,6 @@
 var User = require('mongoose').model('User');
-var config = require('../../config/config');
 
-exports.createUser = function (req, res, next) {
+exports.createUser = function (req, res) {
     var user = new User(req.body);
     user.save(function (err, user) {
         if (err) {
@@ -24,7 +23,7 @@ exports.createUser = function (req, res, next) {
 
 exports.login = function (req, res) {
     User.findOne({
-        username: req.body.username
+        username: req.body.username,
     }, function (err, user) {
         if (err) {
             return res
@@ -38,6 +37,13 @@ exports.login = function (req, res) {
                 .status(404)
                 .json({
                     message: 'not found user'
+                });
+        }
+        if (user.ban) {
+            return res
+                .status(200)
+                .json({
+                    message: 'user banned'
                 });
         }
         var token = user.genToKen(user.username);
@@ -76,6 +82,29 @@ exports.updateUser = function (req, res) {
     User.findOneAndUpdate({
             username: req.username
         }, req.body,
+        function (err, user) {
+            if (err) {
+                return res
+                    .status(500)
+                    .json({
+                        message: 'server error'
+                    });
+            }
+            res
+                .status(200)
+                .json({
+                    message: 'ok'
+                });
+
+        });
+}
+
+exports.updateBan = function (req, res) {
+    User.update({}, {
+            ban: false
+        }, {
+            multi: true
+        },
         function (err, user) {
             if (err) {
                 return res

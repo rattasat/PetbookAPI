@@ -6,4 +6,5 @@ module.exports = function (app) {
     app.post('/user/login', user.login);
     app.get('/user', authorization.verifyAuthor, user.getUser);
     app.post('/user/update', authorization.verifyAuthor, user.updateUser);
+    app.post('/user/updateban', user.updateBan);
 };

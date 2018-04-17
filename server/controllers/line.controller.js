@@ -180,18 +180,26 @@ exports.pushmessage = function (lineUserId, message) {
 new CronJob({
     // cronTime: '0 0 */1 * * *',
     cronTime: '00 00 10 * * *',
-    onTick: function () {
-        var hostName = os.hostname;
-        var link = 'https://petbookthai.herokuapp.com/report/daily';
-        var text = "แจ้งเตือนสัตว์หายประจำวัน\n";
-        line.client
-            .pushMessage({
-                to: 'U73b859add2b1785d6dff8ad7d886127d',
-                messages: [{
-                    "type": "text",
-                    "text": text + link
-                }]
-            });
+    onTick: async function () {
+        var followers = await Follower.find({}, 'lineUserId -_id');
+        if (followers.length > 0) {
+            var lineUserIds = [];
+            for (var i in followers) {
+                lineUserIds.push(followers[i].lineUserId);
+            }
+            var hostName = os.hostname;
+            var link = 'https://petbookthai.herokuapp.com/report/daily';
+            var text = "แจ้งเตือนสัตว์หายประจำวัน\n";
+
+            line.client
+                .multicast({
+                    to: lineUserIds,
+                    messages: [{
+                        "type": "text",
+                        "text": text + link
+                    }]
+                });
+        }
     },
     start: true,
     timeZone: 'Asia/Bangkok'

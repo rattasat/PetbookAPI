@@ -30,6 +30,7 @@ module.exports = function () {
     app.use(cors());
 
     require('../server/routes/user.route')(app);
+    require('../server/routes/admin.route')(app);
     require('../server/routes/index.route')(app);
     require('../server/routes/pet.route')(app);
     require('../server/routes/line.route')(app);

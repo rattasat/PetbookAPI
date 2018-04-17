@@ -48,7 +48,7 @@ exports.getReportDaily = async function (req, res) {
             '$lt': fDate
         }
     }, null, {
-        sort:{
+        sort: {
             created: -1
         }
     });

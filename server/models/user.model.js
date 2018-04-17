@@ -17,7 +17,8 @@ var UserSchema = new Schema({
     email: String,
     lineUserId: String,
     lineStatus: String,
-    verifyCode: String
+    verifyCode: String,
+    ban: Boolean
 });
 
 UserSchema.pre('save', function (next) {
@@ -25,6 +26,7 @@ UserSchema.pre('save', function (next) {
     this.lineUserId = null;
     this.lineStatus = 'not active';
     this.verifyCode = this.VerifyCode();
+    this.block = false;
     next();
 });
 
