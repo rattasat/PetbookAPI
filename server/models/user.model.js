@@ -26,7 +26,7 @@ UserSchema.pre('save', function (next) {
     this.lineUserId = null;
     this.lineStatus = 'not active';
     this.verifyCode = this.VerifyCode();
-    this.block = false;
+    this.ban = false;
     next();
 });
 
