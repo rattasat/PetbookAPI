@@ -202,7 +202,7 @@ new CronJob({
                         },
                         "actions": [{
                             "type": "uri",
-                            "linkUri": "https://petbookthai.herokuapp.com/report/daily",
+                            "linkUri": config.url + "/report/daily",
                             "area": {
                                 "x": 0,
                                 "y": 0,
@@ -226,11 +226,11 @@ new CronJob({
         //             },
         //             "actions": [{
         //                 "type": "uri",
-        //                 "linkUri": "https://petbookthai.herokuapp.com/report/daily",
+        //                 "linkUri": config.url + "/report/daily",
         //                 "area": {
         //                     "x": 0,
         //                     "y": 0,
-        //                     "width": 1044,
+        //                     "width": 1040,
         //                     "height": 1040
         //                 }
         //             }]
