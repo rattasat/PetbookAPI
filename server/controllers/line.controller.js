@@ -195,7 +195,7 @@ new CronJob({
                     messages: [{
                         "type": "imagemap",
                         "baseUrl": "https://firebasestorage.googleapis.com/v0/b/petbookapi-1515952572035.appspot.com/o/line%2Fdaily.jpg?alt=media&token=67acbba4-53a5-4e38-b38e-982e04e10289",
-                        "altText": "This is an imagemap",
+                        "altText": "ประกาศสัตว์หาย",
                         "baseSize": {
                             "height": 1040,
                             "width": 1040
