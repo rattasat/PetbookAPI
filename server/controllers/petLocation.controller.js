@@ -1,7 +1,9 @@
 var PetInlocation = require('mongoose').model('PetInLocation');
+var Pet = require('mongoose').model('Pet');
 var User = require('mongoose').model('User');
 var line = require('./line.controller');
 var moment = require('moment');
+var async = require('async');
 
 exports.reportLocation = function (req, res) {
     var location = new PetInlocation(req.body);
@@ -20,27 +22,37 @@ exports.reportLocation = function (req, res) {
             .json({
                 message: 'ok'
             });
-        User.findOne({
-                username: req.username
-            }, 'lineStatus lineUserId',
-            function (err, user) {
-                if (err) {
-                    throw err;
-                }
-                if (user.lineStatus == 'active') {
-                    message = [{
-                        'type': 'text',
-                        'text': 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์'
-                    }, {
-                        'type': 'location',
-                        'title': req.petname,
-                        'address': 'Location',
-                        'latitude': location.latitude,
-                        'longitude': location.longitude
-                    }];
-                    line.pushmessage(user.lineUserId, message);
-                }
-            });
+        Pet.findOne({
+            _id: req.petid,
+            lostStatus: true
+        }, function (err, pet) {
+            if (err) {
+                throw err;
+            }
+            if (pet) {
+                User.findOne({
+                        username: req.username
+                    }, 'lineStatus lineUserId',
+                    function (err, user) {
+                        if (err) {
+                            throw err;
+                        }
+                        if (user.lineStatus == 'active') {
+                            message = [{
+                                'type': 'text',
+                                'text': 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์'
+                            }, {
+                                'type': 'location',
+                                'title': req.petname,
+                                'address': 'Location',
+                                'latitude': location.latitude,
+                                'longitude': location.longitude
+                            }];
+                            line.pushmessage(user.lineUserId, message);
+                        }
+                    });
+            }
+        })
     });
 }
 
