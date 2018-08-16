@@ -164,6 +164,7 @@ exports.webhook = function (req, res, next) {
 };
 
 exports.pushmessage = function (lineUserId, message) {
+    console.log("lineId is: "+lineUserId);
     line.client
         .pushMessage({
             to: lineUserId,
