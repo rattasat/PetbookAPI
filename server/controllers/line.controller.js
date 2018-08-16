@@ -2,8 +2,6 @@ var User = require('mongoose').model('User');
 var Follower = require('mongoose').model('Follower');
 var line = require('node-line-bot-api');
 var config = require('../../config/config');
-var CronJob = require('cron').CronJob;
-
 
 line.init({
     accessToken: config.accessToken,
@@ -164,7 +162,6 @@ exports.webhook = function (req, res, next) {
 };
 
 exports.pushmessage = function (lineUserId, message) {
-    console.log("lineId is: "+lineUserId);
     line.client
         .pushMessage({
             to: lineUserId,

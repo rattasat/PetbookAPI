@@ -28,7 +28,6 @@ exports.reportLocation = function (req, res) {
         }, function (err, pet) {
             if (err) {
                 throw err;
-                console.log("nopet");
             }
             if (pet) {
                 User.findOne({
@@ -39,17 +38,18 @@ exports.reportLocation = function (req, res) {
                             throw err;
                         }
                         if (user.lineStatus == 'active') {
+
                             message = [{
                                     'type': 'text',
                                     'text': 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์'
+                                },
+                                {
+                                    'type': 'location',
+                                    'title': req.petname,
+                                    'address': 'Location',
+                                    'latitude': location.latitude,
+                                    'longitude': location.longitude
                                 }
-                                // {
-                                //     'type': 'location',
-                                //     'title': req.petname,
-                                //     'address': 'Location',
-                                //     'latitude': location.latitude,
-                                //     'longitude': location.longitude
-                                // }
                             ];
                             line.pushmessage(user.lineUserId, message);
                         }
