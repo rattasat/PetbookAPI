@@ -1,10 +1,9 @@
 var User = require('mongoose').model('User');
 var Follower = require('mongoose').model('Follower');
-var Config = require('mongoose').model('Config');
 var line = require('node-line-bot-api');
 var config = require('../../config/config');
 var CronJob = require('cron').CronJob;
-var async = require('async');
+
 
 line.init({
     accessToken: config.accessToken,
@@ -171,70 +170,3 @@ exports.pushmessage = function (lineUserId, message) {
             messages: message
         });
 }
-
-new CronJob({
-    // cronTime: '*/10 * * * * *',
-    cronTime: '00 00 10 * * *',
-    // cronTime: '00 03 22 * * *',
-    onTick: async function () {
-        var followers = await Follower.find({}, 'lineUserId -_id');
-        if (followers.length > 0) {
-            var lineUserIds = [];
-            for (var i in followers) {
-                lineUserIds.push(followers[i].lineUserId);
-            }
-            var link = 'https://petbookthai.herokuapp.com/report/daily';
-            var text = "แจ้งเตือนสัตว์หายประจำวัน\n";
-
-            line.client
-                .multicast({
-                    to: lineUserIds,
-                    messages: [{
-                        "type": "imagemap",
-                        "baseUrl": "https://firebasestorage.googleapis.com/v0/b/petbookapi-1515952572035.appspot.com/o/line%2Fdaily.jpg?alt=media&token=67acbba4-53a5-4e38-b38e-982e04e10289",
-                        "altText": "ประกาศสัตว์หาย",
-                        "baseSize": {
-                            "height": 1040,
-                            "width": 1040
-                        },
-                        "actions": [{
-                            "type": "uri",
-                            "linkUri": config.url + "/report/daily",
-                            "area": {
-                                "x": 0,
-                                "y": 0,
-                                "width": 1040,
-                                "height": 1040
-                            }
-                        }]
-                    }]
-                });
-        }
-        // for test
-        // line.client
-        //     .pushMessage({
-        //         to: 'U73b859add2b1785d6dff8ad7d886127d',
-        //         messages: [{
-        //             "type": "imagemap",
-        //             "baseUrl": "https://firebasestorage.googleapis.com/v0/b/petbookapi-1515952572035.appspot.com/o/line%2Fdaily.jpg?alt=media&token=67acbba4-53a5-4e38-b38e-982e04e10289",
-        //             "altText": "This is an imagemap",
-        //             "baseSize": {
-        //                 "height": 1040,
-        //                 "width": 1040
-        //             },
-        //             "actions": [{
-        //                 "type": "uri",
-        //                 "linkUri": config.url + "/report/daily",
-        //                 "area": {
-        //                     "x": 0,
-        //                     "y": 0,
-        //                     "width": 1040,
-        //                     "height": 1040
-        //                 }
-        //             }]
-        //         }]
-        //     });
-    },
-    start: true,
-    timeZone: 'Asia/Bangkok'
-});

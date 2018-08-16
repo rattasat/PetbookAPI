@@ -39,15 +39,17 @@ exports.reportLocation = function (req, res) {
                         }
                         if (user.lineStatus == 'active') {
                             message = [{
-                                'type': 'text',
-                                'text': 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์'
-                            }, {
-                                'type': 'location',
-                                'title': req.petname,
-                                'address': 'Location',
-                                'latitude': location.latitude,
-                                'longitude': location.longitude
-                            }];
+                                    'type': 'text',
+                                    'text': 'พบ ' + req.petname + ' แล้วกรุณาตรวจสอบที่เว็บไซต์'
+                                },
+                                {
+                                    'type': 'location',
+                                    'title': req.petname,
+                                    'address': 'Location',
+                                    'latitude': location.latitude,
+                                    'longitude': location.longitude
+                                }
+                            ];
                             line.pushmessage(user.lineUserId, message);
                         }
                     });
